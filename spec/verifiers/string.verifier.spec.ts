@@ -1,6 +1,7 @@
 import { StringVerifier } from "../../src/verifiers/string.verifier";
 import { Forger } from "@artstesh/forger";
 import { ShouldError } from "../../src/models/should.error";
+import { Times } from "../../src/verifiers/utils/times.counter";
 
 describe('StringVerifier', () => {
 
@@ -280,7 +281,81 @@ describe('StringVerifier', () => {
     it('equals throws', () =>{
       const entry = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).equals(entry+'')).not.toThrow();
+      expect(() => new StringVerifier(entry).notEquals(entry+'')).toThrow(ShouldError);
+    })
+  })
+
+  describe('equalsIgnoreCase', () => {
+
+    it('null success', () =>{
+      expect(() => new StringVerifier(null).equalsIgnoreCase(null)).not.toThrow();
+    })
+    it('undefined success', () =>{
+      expect(() => new StringVerifier(undefined).equalsIgnoreCase(undefined)).not.toThrow();
+    })
+    it('empty success', () =>{
+      expect(() => new StringVerifier('').equalsIgnoreCase('')).not.toThrow();
+    })
+    it('uppercased success', () =>{
+      const entry = Forger.create<string>({stringLength: 50})!;
+      //
+      expect(() => new StringVerifier(entry).equalsIgnoreCase(entry.toUpperCase())).not.toThrow();
+    })
+    it('lowercased success', () =>{
+      const entry = Forger.create<string>({stringLength: 50})!;
+      //
+      expect(() => new StringVerifier(entry).equalsIgnoreCase(entry.toLowerCase())).not.toThrow();
+    })
+    it('different throws', () =>{
+      const entry = Forger.create<string>()!;
+      const other = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry).equalsIgnoreCase(other)).toThrow(ShouldError);
+    })
+    it('success', () =>{
+      const entry = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry).equalsIgnoreCase(entry+'')).not.toThrow();
+    })
+  })
+
+  describe('notEqualsIgnoreCase', () => {
+
+    it('null success', () =>{
+      const entry = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(null)).not.toThrow();
+    })
+    it('undefined success', () =>{
+      const entry = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(undefined)).not.toThrow();
+    })
+    it('empty success', () =>{
+      const entry = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry).notEqualsIgnoreCase('')).not.toThrow();
+    })
+    it('uppercased throws', () =>{
+      const entry = Forger.create<string>({stringLength: 50})!;
+      //
+      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(entry.toUpperCase())).toThrow(ShouldError);
+    })
+    it('lowercased throws', () =>{
+      const entry = Forger.create<string>({stringLength: 50})!;
+      //
+      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(entry.toLowerCase())).toThrow(ShouldError);
+    })
+    it('equals throws', () =>{
+      const entry = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(entry+'')).toThrow(ShouldError);
+    })
+    it('different success', () =>{
+      const entry = Forger.create<string>()!;
+      const other = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(other)).not.toThrow();
     })
   })
 
@@ -305,5 +380,73 @@ describe('StringVerifier', () => {
     it('equal success', () =>{
       expect(() => new StringVerifier(entry).hasLength(strLength)).not.toThrow();
     })
+  })
+
+  describe('contains', () => {
+
+    it("entry undefined throws", () => {
+      const expected = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(undefined).contains(expected)).toThrow(ShouldError);
+    });
+
+    it("entry null throws", () => {
+      const expected = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(null).contains(expected)).toThrow(ShouldError);
+    });
+
+    it("not contains throws", () => {
+      const expected = Forger.create<string>()!;
+      const entry = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry).contains(expected)).toThrow(ShouldError);
+    });
+
+    it("contains once success", () => {
+      const expected = Forger.create<string>()!;
+      const entry = Forger.create<string>()! + new Array(1).fill(expected).join('');
+      //
+      expect(() => new StringVerifier(entry).contains(expected, Times.once())).not.toThrow();
+    });
+
+    it("not contains once throws", () => {
+      const expected = Forger.create<string>()!;
+      const entry = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry).contains(expected, Times.once())).toThrow(ShouldError);
+    });
+
+    it("contains twice success", () => {
+      const expected = Forger.create<string>()!;
+      const entry = Forger.create<string>()! + new Array(2).fill(expected).join('');
+      //
+      expect(() => new StringVerifier(entry).contains(expected, Times.twice())).not.toThrow();
+    });
+
+    it("not contains twice throws", () => {
+      const expected = Forger.create<string>()!;
+      const entry = Forger.create<string>()! + new Array(1).fill(expected).join('');
+      //
+      expect(() => new StringVerifier(entry).contains(expected, Times.twice())).toThrow(ShouldError);
+    });
+
+    it("contains exactly success", () => {
+      const exactly = Forger.create<number>({numberMin: 1, numberMax: 5})!;
+      const expected = Forger.create<string>()!;
+      const entry = Forger.create<string>()! + new Array(exactly).fill(expected).join('');
+      //
+      expect(() => new StringVerifier(entry).contains(expected, Times.exactly(exactly))).not.toThrow();
+    });
+
+    it("not contains exactly throws", () => {
+      const exactly = Forger.create<number>({numberMin: 1, numberMax: 5})!;
+      const expected = Forger.create<string>()!;
+      const entryMore = Forger.create<string>()! + new Array(exactly+1).fill(expected).join('');
+      const entryLess = Forger.create<string>()! + new Array(exactly-1).fill(expected).join('');
+      //
+      expect(() => new StringVerifier(entryMore).contains(expected, Times.exactly(exactly))).toThrow(ShouldError);
+      expect(() => new StringVerifier(entryLess).contains(expected, Times.exactly(exactly))).toThrow(ShouldError);
+    });
   })
 })

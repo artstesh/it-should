@@ -1,7 +1,8 @@
 import { AbstractVerifier } from "./abstract.verifier";
+import { SingleParamFunc } from "./utils/verify.func";
 
 
-export class StringVerifier extends AbstractVerifier{
+export class StringVerifier extends AbstractVerifier {
   constructor(private entry: string | null | undefined) {
     super();
   }
@@ -40,4 +41,16 @@ export class StringVerifier extends AbstractVerifier{
 
   notEquals = (expected: string | null | undefined): StringVerifier =>
     this.manage(this.entry !== expected, `${this.entry} does equal ${expected}.`);
+
+  equalsIgnoreCase = (expected: string | null | undefined): StringVerifier =>
+    this.manage(this.entry?.toUpperCase() === expected?.toUpperCase(), `${this.entry} doesn't equal ${expected}.`);
+
+  notEqualsIgnoreCase = (expected: string | null | undefined): StringVerifier =>
+    this.manage(this.entry?.toUpperCase() !== expected?.toUpperCase(), `${this.entry} does equal ${expected}.`);
+
+  contains(expected: string, counter?: SingleParamFunc<number>): void {
+    const count = (this.entry?.split(expected)?.length ?? 0) - 1;
+    const error = `'${this.entry}' doesn't contain '${expected}' expected number of times.`;
+    this.manage(!!counter ? counter(count) : count > 0, error)
+  }
 }
