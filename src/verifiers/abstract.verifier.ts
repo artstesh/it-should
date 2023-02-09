@@ -1,15 +1,15 @@
 import { ShouldError } from "../models/should.error";
 
 export abstract class AbstractVerifier{
-  protected negative = false;
+  protected notIsActivated = false;
 
   public get not(): this {
-    this.negative = true;
+    this.notIsActivated = true;
     return this;
   }
 
-  protected manage(check: boolean, error: string): this {
-    if (this.negative ? !check : check) return this;
+  protected manage(check: boolean, error: string, ignoreNegative = false): this {
+    if ((this.notIsActivated && !ignoreNegative) ? !check : check) return this;
     throw new ShouldError(error);
   }
 }

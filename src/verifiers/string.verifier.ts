@@ -15,24 +15,22 @@ export class StringVerifier extends AbstractVerifier {
     this.manage(this.entry?.replaceAll(" ", "")?.length === 0, `'${this.entry} 'is not whitespace.`);
 
   upperCased = (): StringVerifier =>
-    this.manage(!!this.entry?.replaceAll(" ", "") && this.entry === this.entry.toUpperCase(), `'${this.entry}' is not uppercased.`);
+    this.manage(!!this.entry
+      && this.entry === this.entry.toUpperCase(), `'${this.entry}' is not uppercased.`,
+      !this.entry?.replaceAll(" ", ""));
 
   lowerCased = (): StringVerifier =>
-    this.manage(!!this.entry?.replaceAll(" ", "") && this.entry === this.entry.toLowerCase(), `'${this.entry} 'is not lowercased.`);
+    this.manage(!!this.entry
+      && this.entry === this.entry.toLowerCase(), `'${this.entry} 'is not lowercased.`,
+      !this.entry?.replaceAll(" ", ""));
 
   hasLength = (expected: number): StringVerifier =>
     this.manage(this.entry?.length === expected, `'${this.entry} 'doesn't equal expected length ${expected}.`);
 
   equals = (expected: string | null | undefined): StringVerifier => this.manage(this.entry === expected, `'${this.entry} 'doesn't equal ${expected}.`);
 
-  notEquals = (expected: string | null | undefined): StringVerifier =>
-    this.manage(this.entry !== expected, `'${this.entry} 'does equal ${expected}.`);
-
   equalsIgnoreCase = (expected: string | null | undefined): StringVerifier =>
     this.manage(this.entry?.toUpperCase() === expected?.toUpperCase(), `'${this.entry} 'doesn't equal ${expected}.`);
-
-  notEqualsIgnoreCase = (expected: string | null | undefined): StringVerifier =>
-    this.manage(this.entry?.toUpperCase() !== expected?.toUpperCase(), `'${this.entry} 'does equal ${expected}.`);
 
   contains(expected: string, counter?: SingleParamFunc<number>): void {
     const count = (this.entry?.split(expected)?.length ?? 0) - 1;

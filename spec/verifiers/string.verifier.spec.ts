@@ -128,7 +128,7 @@ describe('StringVerifier', () => {
       expect(() => new StringVerifier(undefined).upperCased()).toThrow(ShouldError);
     })
     it('whitespace success', () =>{
-      expect(() => new StringVerifier(' ').upperCased()).toThrow(ShouldError);
+      expect(() => new StringVerifier(' ').upperCased()).not.toThrow();
     })
     it('not uppercased throws', () =>{
       const entry = Forger.create<string>({stringUpCase: false, stringLength: 50});
@@ -145,10 +145,10 @@ describe('StringVerifier', () => {
   describe('not upperCased', () => {
 
     it('null success', () =>{
-      expect(() => new StringVerifier(null).not.upperCased()).not.toThrow();
+      expect(() => new StringVerifier(null).not.upperCased()).toThrow(ShouldError);
     })
     it('undefined success', () =>{
-      expect(() => new StringVerifier(undefined).not.upperCased()).not.toThrow();
+      expect(() => new StringVerifier(undefined).not.upperCased()).toThrow(ShouldError);
     })
     it('whitespace success', () =>{
       expect(() => new StringVerifier(' ').not.upperCased()).not.toThrow();
@@ -168,10 +168,10 @@ describe('StringVerifier', () => {
   describe('not lowerCased', () => {
 
     it('null success', () =>{
-      expect(() => new StringVerifier(null).not.lowerCased()).not.toThrow();
+      expect(() => new StringVerifier(null).not.lowerCased()).toThrow(ShouldError);
     })
     it('undefined success', () =>{
-      expect(() => new StringVerifier(undefined).not.lowerCased()).not.toThrow();
+      expect(() => new StringVerifier(undefined).not.lowerCased()).toThrow(ShouldError);
     })
     it('whitespace success', () =>{
       expect(() => new StringVerifier(' ').not.lowerCased()).not.toThrow();
@@ -196,8 +196,8 @@ describe('StringVerifier', () => {
     it('undefined throws', () =>{
       expect(() => new StringVerifier(undefined).lowerCased()).toThrow(ShouldError);
     })
-    it('whitespace throws', () =>{
-      expect(() => new StringVerifier(' ').lowerCased()).toThrow(ShouldError);
+    it('whitespace success', () =>{
+      expect(() => new StringVerifier(' ').lowerCased()).not.toThrow();
     })
     it('uppercased success', () =>{
       const entry = Forger.create<string>({stringLowCase: false, stringLength: 50});
@@ -250,38 +250,38 @@ describe('StringVerifier', () => {
     it('null success', () =>{
       const entry = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).notEquals(null)).not.toThrow();
+      expect(() => new StringVerifier(entry).not.equals(null)).not.toThrow();
     })
     it('undefined success', () =>{
       const entry = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).notEquals(undefined)).not.toThrow();
+      expect(() => new StringVerifier(entry).not.equals(undefined)).not.toThrow();
     })
     it('empty success', () =>{
       const entry = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).notEquals('')).not.toThrow();
+      expect(() => new StringVerifier(entry).not.equals('')).not.toThrow();
     })
     it('uppercased success', () =>{
       const entry = Forger.create<string>({stringLength: 50})!;
       //
-      expect(() => new StringVerifier(entry).notEquals(entry.toUpperCase())).not.toThrow();
+      expect(() => new StringVerifier(entry).not.equals(entry.toUpperCase())).not.toThrow();
     })
     it('lowercased success', () =>{
       const entry = Forger.create<string>({stringLength: 50})!;
       //
-      expect(() => new StringVerifier(entry).notEquals(entry.toLowerCase())).not.toThrow();
+      expect(() => new StringVerifier(entry).not.equals(entry.toLowerCase())).not.toThrow();
     })
     it('different success', () =>{
       const entry = Forger.create<string>()!;
       const other = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).notEquals(other)).not.toThrow();
+      expect(() => new StringVerifier(entry).not.equals(other)).not.toThrow();
     })
     it('equals throws', () =>{
       const entry = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).notEquals(entry+'')).toThrow(ShouldError);
+      expect(() => new StringVerifier(entry).not.equals(entry+'')).toThrow(ShouldError);
     })
   })
 
@@ -324,38 +324,38 @@ describe('StringVerifier', () => {
     it('null success', () =>{
       const entry = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(null)).not.toThrow();
+      expect(() => new StringVerifier(entry).not.equalsIgnoreCase(null)).not.toThrow();
     })
     it('undefined success', () =>{
       const entry = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(undefined)).not.toThrow();
+      expect(() => new StringVerifier(entry).not.equalsIgnoreCase(undefined)).not.toThrow();
     })
     it('empty success', () =>{
       const entry = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).notEqualsIgnoreCase('')).not.toThrow();
+      expect(() => new StringVerifier(entry).not.equalsIgnoreCase('')).not.toThrow();
     })
     it('uppercased throws', () =>{
       const entry = Forger.create<string>({stringLength: 50})!;
       //
-      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(entry.toUpperCase())).toThrow(ShouldError);
+      expect(() => new StringVerifier(entry).not.equalsIgnoreCase(entry.toUpperCase())).toThrow(ShouldError);
     })
     it('lowercased throws', () =>{
       const entry = Forger.create<string>({stringLength: 50})!;
       //
-      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(entry.toLowerCase())).toThrow(ShouldError);
+      expect(() => new StringVerifier(entry).not.equalsIgnoreCase(entry.toLowerCase())).toThrow(ShouldError);
     })
     it('equals throws', () =>{
       const entry = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(entry+'')).toThrow(ShouldError);
+      expect(() => new StringVerifier(entry).not.equalsIgnoreCase(entry+'')).toThrow(ShouldError);
     })
     it('different success', () =>{
       const entry = Forger.create<string>()!;
       const other = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).notEqualsIgnoreCase(other)).not.toThrow();
+      expect(() => new StringVerifier(entry).not.equalsIgnoreCase(other)).not.toThrow();
     })
   })
 
