@@ -441,4 +441,38 @@ describe('NumberVerifier', () => {
       expect(() => new NumberVerifier(null).not.negative()).toThrow(ShouldError);
     })
   })
+
+  describe('inRange', () => {
+    it('success', () => {
+      const entry = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(entry).inRange(entry-1, entry+1)).not.toThrow();
+    })
+
+    it('equaly throws', () => {
+      const entry = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(entry).inRange(entry, entry+1)).toThrow(ShouldError);
+      expect(() => new NumberVerifier(entry).inRange(entry-1, entry)).toThrow(ShouldError);
+    })
+
+    it('out of range throws', () => {
+      const entry = Forger.create<number>({numberMin: -1000, numberMax: 0})!;
+      //
+      expect(() => new NumberVerifier(entry).inRange(entry+1, entry+2)).toThrow(ShouldError);
+      expect(() => new NumberVerifier(entry).inRange(entry-2, entry-1)).toThrow(ShouldError);
+    })
+
+    it('undefined throws', () => {
+      const range = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(undefined).inRange(range,range)).toThrow(ShouldError);
+    })
+
+    it('null throws', () => {
+      const range = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(null).inRange(range,range)).toThrow(ShouldError);
+    })
+  })
 })

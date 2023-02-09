@@ -18,7 +18,7 @@ export class NumberVerifier extends AbstractVerifier {
 
   less = (then: number): NumberVerifier =>
     this.manage( !!this.entry && this.entry < then,
-      `${this.entry} is not greater  or equal ${then}.`, !this.entry);
+      `${this.entry} is not greater or equal ${then}.`, !this.entry);
 
   lessOrEqual = (then: number): NumberVerifier =>
     this.manage( !!this.entry && this.entry <= then,
@@ -29,4 +29,12 @@ export class NumberVerifier extends AbstractVerifier {
 
   negative = (): NumberVerifier => this.manage(!!this.entry && this.entry < 0,
     `${this.entry} is not negative.`, this.entry == null);
+
+  inRange = (min: number, max: number): NumberVerifier =>
+    this.manage(!!this.entry && this.entry > min && this.entry < max, `${this.entry} isn't in range [${min},${max}].`,
+      !this.entry)
+
+  approximately = (expected: number, precision: number): NumberVerifier =>
+    this.manage(!!this.entry && Math.abs(this.entry - expected) < precision, `${this.entry} doesn't equal ${expected}.`,
+      !this.entry);
 }
