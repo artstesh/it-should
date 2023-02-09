@@ -7,50 +7,56 @@ export class StringVerifier extends AbstractVerifier {
     super();
   }
 
-  notEmpty = (): StringVerifier => this.manage(this.entry !== "", `${this.entry} is empty.`);
+  empty = (): StringVerifier => this.manage(this.entry === "", `'${this.entry} 'is not empty.`);
 
-  notNullOrEmpty = (): StringVerifier => this.manage(!!this.entry, `${this.entry} is empty or null.`);
+  nullOrEmpty = (): StringVerifier => this.manage(!this.entry, `'${this.entry} 'is not empty or null.`);
 
-  beEmpty = (): StringVerifier => this.manage(this.entry === "", `${this.entry} is not empty.`);
+  whitespace = (): StringVerifier =>
+    this.manage(this.entry?.replaceAll(" ", "")?.length === 0, `'${this.entry} 'is not whitespace.`);
 
-  beNullOrEmpty = (): StringVerifier => this.manage(!this.entry, `${this.entry} is not empty or null.`);
+  upperCased = (): StringVerifier =>
+    this.manage(!!this.entry?.replaceAll(" ", "") && this.entry === this.entry.toUpperCase(), `'${this.entry}' is not uppercased.`);
 
-  beWhiteSpace = (): StringVerifier =>
-    this.manage(this.entry?.replaceAll(" ", "")?.length === 0, `${this.entry} is not whitespace.`);
-
-  notWhiteSpace = (): StringVerifier =>
-    this.manage(!this.entry || this.entry.replaceAll(" ", "").length !== 0,
-      `${this.entry} is whitespace.`);
-
-  beUpperCased = (): StringVerifier =>
-    this.manage(!this.entry || this.entry === this.entry?.toUpperCase(), `${this.entry} is not uppercased.`);
-
-  notBeUpperCased = (): StringVerifier =>
-    this.manage(!this.entry || this.entry === this.entry?.toLowerCase(), `${this.entry} is uppercased.`);
-
-  beLowerCased = (): StringVerifier =>
-    this.manage(!this.entry || this.entry === this.entry?.toLowerCase(), `${this.entry} is not lowercased.`);
-
-  notBeLowerCased = (): StringVerifier =>
-    this.manage(!this.entry || this.entry === this.entry?.toUpperCase(), `${this.entry} is lowercased.`);
+  lowerCased = (): StringVerifier =>
+    this.manage(!!this.entry?.replaceAll(" ", "") && this.entry === this.entry.toLowerCase(), `'${this.entry} 'is not lowercased.`);
 
   hasLength = (expected: number): StringVerifier =>
-    this.manage(this.entry?.length === expected, `${this.entry} doesn't equal expected length ${expected}.`);
+    this.manage(this.entry?.length === expected, `'${this.entry} 'doesn't equal expected length ${expected}.`);
 
-  equals = (expected: string | null | undefined): StringVerifier => this.manage(this.entry === expected, `${this.entry} doesn't equal ${expected}.`);
+  equals = (expected: string | null | undefined): StringVerifier => this.manage(this.entry === expected, `'${this.entry} 'doesn't equal ${expected}.`);
 
   notEquals = (expected: string | null | undefined): StringVerifier =>
-    this.manage(this.entry !== expected, `${this.entry} does equal ${expected}.`);
+    this.manage(this.entry !== expected, `'${this.entry} 'does equal ${expected}.`);
 
   equalsIgnoreCase = (expected: string | null | undefined): StringVerifier =>
-    this.manage(this.entry?.toUpperCase() === expected?.toUpperCase(), `${this.entry} doesn't equal ${expected}.`);
+    this.manage(this.entry?.toUpperCase() === expected?.toUpperCase(), `'${this.entry} 'doesn't equal ${expected}.`);
 
   notEqualsIgnoreCase = (expected: string | null | undefined): StringVerifier =>
-    this.manage(this.entry?.toUpperCase() !== expected?.toUpperCase(), `${this.entry} does equal ${expected}.`);
+    this.manage(this.entry?.toUpperCase() !== expected?.toUpperCase(), `'${this.entry} 'does equal ${expected}.`);
 
   contains(expected: string, counter?: SingleParamFunc<number>): void {
     const count = (this.entry?.split(expected)?.length ?? 0) - 1;
     const error = `'${this.entry}' doesn't contain '${expected}' expected number of times.`;
     this.manage(!!counter ? counter(count) : count > 0, error)
+  }
+
+  containsIgnoreCase(expected: string, counter?: SingleParamFunc<number>): void {
+    const count = (this.entry?.toUpperCase()?.split(expected?.toUpperCase())?.length ?? 0) - 1;
+    const error = `'${this.entry}' doesn't contain '${expected}' expected number of times.`;
+    this.manage(!!counter ? counter(count) : count > 0, error)
+  }
+
+  containsAny(expected: string[]): void {
+    let found = 0;
+    if (!!this.entry)
+      found = expected.map(e => this.entry?.indexOf(e) !== -1).filter(e => e)?.length ?? 0;
+    this.manage(found > 0, `'${this.entry}' doesn't contain any of [${expected.join(',')}].`);
+  }
+
+  containsAnyIgnoreCase(expected: string[]): void {
+    let found = 0;
+    if (!!this.entry)
+      found = expected.map(e => this.entry?.toUpperCase().indexOf(e.toUpperCase()) !== -1).filter(e => e)?.length ?? 0;
+    this.manage(found > 0, `'${this.entry}' doesn't contain any of [${expected.join(',')}].`);
   }
 }
