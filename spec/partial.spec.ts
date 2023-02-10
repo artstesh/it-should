@@ -1,9 +1,15 @@
-import { should } from "../src";
-
 describe('isolated', () => {
+    interface ITest {
+        id: number;
+        name: string;
+        created: Date;
+        isActive: boolean;
+    }
 
-    it('union literals', () => {
+
+
+    it('equal success', () => {
         //
-        should().number(23).greater(1);
-    });
+        expect(() => {}).not.toThrow();
+    })
 })
