@@ -25,12 +25,12 @@ export class StringVerifier extends AbstractVerifier {
       !this.entry?.replaceAll(" ", ""));
 
   hasLength = (expected: number): StringVerifier =>
-    this.manage(this.entry?.length === expected, `'${this.entry} 'doesn't equal expected length ${expected}.`);
+    this.manage(this.entry?.length === expected, `'${this.entry}' doesn't equal expected length ${expected}.`);
 
-  equals = (expected: string | null | undefined): StringVerifier => this.manage(this.entry === expected, `'${this.entry} 'doesn't equal ${expected}.`);
+  equals = (expected: string | null | undefined): StringVerifier => this.manage(this.entry === expected, `'${this.entry}' doesn't equal ${expected}.`);
 
   equalsIgnoreCase = (expected: string | null | undefined): StringVerifier =>
-    this.manage(this.entry?.toUpperCase() === expected?.toUpperCase(), `'${this.entry} 'doesn't equal ${expected}.`);
+    this.manage(this.entry?.toUpperCase() === expected?.toUpperCase(), `'${this.entry}' doesn't equal ${expected}.`);
 
   contains(expected: string, counter?: SingleParamFunc<number>): void {
     const count = (this.entry?.split(expected)?.length ?? 0) - 1;

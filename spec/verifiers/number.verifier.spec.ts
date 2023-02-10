@@ -475,4 +475,104 @@ describe('NumberVerifier', () => {
       expect(() => new NumberVerifier(null).inRange(range,range)).toThrow(ShouldError);
     })
   })
+
+  describe('not inRange', () => {
+    it('in range throws', () => {
+      const entry = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(entry).not.inRange(entry-1, entry+1)).toThrow(ShouldError);
+    })
+
+    it('equaly success', () => {
+      const entry = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(entry).not.inRange(entry, entry+1)).not.toThrow();
+      expect(() => new NumberVerifier(entry).not.inRange(entry-1, entry)).not.toThrow();
+    })
+
+    it('out of range success', () => {
+      const entry = Forger.create<number>({numberMin: -1000, numberMax: 0})!;
+      //
+      expect(() => new NumberVerifier(entry).not.inRange(entry+1, entry+2)).not.toThrow();
+      expect(() => new NumberVerifier(entry).not.inRange(entry-2, entry-1)).not.toThrow();
+    })
+
+    it('undefined throws', () => {
+      const range = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(undefined).not.inRange(range,range)).toThrow(ShouldError);
+    })
+
+    it('null throws', () => {
+      const range = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(null).not.inRange(range,range)).toThrow(ShouldError);
+    })
+  })
+
+  describe('approximately', () => {
+    it('success', () => {
+      const entry = Forger.create<number>({numberFloat: true})!;
+      //
+      expect(() => new NumberVerifier(entry).approximately(entry+.1, .5)).not.toThrow();
+    })
+
+    it('equaly success', () => {
+      const entry = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(entry).approximately(entry, .1)).not.toThrow();
+    })
+
+    it('out of range throws', () => {
+      const entry = Forger.create<number>({numberMin: -1000, numberMax: 0})!;
+      //
+      expect(() => new NumberVerifier(entry).approximately(entry+.8, .5)).toThrow(ShouldError);
+      expect(() => new NumberVerifier(entry).approximately(entry-.8, .5)).toThrow(ShouldError);
+    })
+
+    it('undefined throws', () => {
+      const range = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(undefined).approximately(range,range)).toThrow(ShouldError);
+    })
+
+    it('null throws', () => {
+      const range = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(null).approximately(range,range)).toThrow(ShouldError);
+    })
+  })
+
+  describe('not approximately', () => {
+    it('in range throws', () => {
+      const entry = Forger.create<number>({numberFloat: true})!;
+      //
+      expect(() => new NumberVerifier(entry).not.approximately(entry+.1, .5)).toThrow(ShouldError);
+    })
+
+    it('equaly throws', () => {
+      const entry = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(entry).not.approximately(entry, .1)).toThrow(ShouldError);
+    })
+
+    it('out of range success', () => {
+      const entry = Forger.create<number>({numberMin: -1000, numberMax: 0})!;
+      //
+      expect(() => new NumberVerifier(entry).not.approximately(entry+.8, .5)).not.toThrow();
+      expect(() => new NumberVerifier(entry).not.approximately(entry-.8, .5)).not.toThrow();
+    })
+
+    it('undefined throws', () => {
+      const range = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(undefined).not.approximately(range,range)).toThrow(ShouldError);
+    })
+
+    it('null throws', () => {
+      const range = Forger.create<number>()!;
+      //
+      expect(() => new NumberVerifier(null).not.approximately(range,range)).toThrow(ShouldError);
+    })
+  })
 })

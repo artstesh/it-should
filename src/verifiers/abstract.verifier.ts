@@ -10,6 +10,7 @@ export abstract class AbstractVerifier{
 
   protected manage(check: boolean, error: string, ignoreNegative = false): this {
     if ((this.notIsActivated && !ignoreNegative) ? !check : check) return this;
+    console.log(error);
     throw new ShouldError(error);
   }
 }
