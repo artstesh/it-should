@@ -1,6 +1,9 @@
 import { AbstractVerifier } from './abstract.verifier';
 import { SingleParamFunc } from './utils/verify.func';
 
+/**
+ * An inspector responsible for a string verifications
+ */
 export class StringVerifier extends AbstractVerifier {
   constructor(private entry: string | null | undefined) {
     super();

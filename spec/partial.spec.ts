@@ -1,15 +1,10 @@
-describe('isolated', () => {
-    interface ITest {
-        id: number;
-        name: string;
-        created: Date;
-        isActive: boolean;
-    }
+import { Forger } from "@artstesh/forger";
+import { should } from "../src";
 
-
-
-    it('equal success', () => {
-        //
-        expect(() => {}).not.toThrow();
-    })
-})
+describe("isolated", () => {
+  it("success asc", () => {
+    let entry: string[] = Forger.create<string[]>({ arrayLength: 10 })!;
+    //
+    should().array(entry).not.ordered();
+  });
+});

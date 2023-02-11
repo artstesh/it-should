@@ -1,5 +1,8 @@
 import { AbstractVerifier } from './abstract.verifier';
 
+/**
+ * An inspector responsible for number verifications
+ */
 export class NumberVerifier extends AbstractVerifier {
   constructor(private entry: number | null | undefined) {
     super();

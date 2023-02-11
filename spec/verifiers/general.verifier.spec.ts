@@ -2,7 +2,8 @@ import { GeneralVerifier } from "../../src/verifiers/general.verifier";
 import { Forger } from "@artstesh/forger";
 import { NumberVerifier } from "../../src/verifiers/number.verifier";
 import { StringVerifier } from "../../src/verifiers/string.verifier";
-import { ObjectVerifier } from "../../src/verifiers/object.verifier";
+import { ObjectsVerifier } from "../../src/verifiers/objects.verifier";
+import { ArrayVerifier } from "../../src/verifiers/array.verifier";
 
 describe('GeneralVerifier', () => {
 
@@ -18,10 +19,16 @@ describe('GeneralVerifier', () => {
     expect(typeof result == typeof StringVerifier)
   })
 
-  it('creates object verifier', () => {
+  it('creates objects verifier', () => {
     interface Test {field: string}
-    const result = GeneralVerifier.getInstance().object(Forger.create<Test>());
+    const result = GeneralVerifier.getInstance().objects(Forger.create<Test>(), Forger.create<Test>());
     //
-    expect(typeof result == typeof ObjectVerifier)
+    expect(typeof result == typeof ObjectsVerifier)
+  })
+
+  it('creates array verifier', () => {
+    const result = GeneralVerifier.getInstance().array(Forger.create<string[]>());
+    //
+    expect(typeof result == typeof ArrayVerifier)
   })
 })

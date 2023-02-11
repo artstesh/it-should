@@ -1,10 +1,7 @@
-// tslint:disable-next-line:no-empty-interface
-export interface ShouldError extends Error {}
+export class ShouldError extends Error {
+  constructor(msg: string) {
+    super(msg);
 
-interface ShouldErrorConstructor extends ErrorConstructor {
-  new (message?: string): ShouldError;
-  (message?: string): ShouldError;
-  readonly prototype: ShouldError;
+    Object.setPrototypeOf(this, ShouldError.prototype);
+  }
 }
-
-export declare var ShouldError: ShouldErrorConstructor;
