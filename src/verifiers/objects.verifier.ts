@@ -13,25 +13,44 @@ export class ObjectsVerifier<T, P> extends AbstractVerifier {
     super();
   }
 
+  /**
+   * Checking that the objects are equal
+   * @throws {@link ShouldError} if any of objects is not defined regardless the presence/absence of not() function.
+   * @throws {@link ShouldError} if objects are different accordingly to the defined rules.
+   */
   equal(): ObjectsVerifier<T, P> {
     return this.manage(this.compareKeys(this.entry, this.other), `Objects don't equal.`);
   }
 
+  /**
+   * The method defines a rule for comparing a concrete property of the objects
+   * @param prop A name of a property
+   * @param checker A function that defines a way of comparing of the properties
+   */
   rule<K extends keyof T>(prop: K, checker: (o1: T[K], o2: T[K]) => boolean): ObjectsVerifier<T, P> {
     this._rules[prop + ''] = checker;
     return this;
   }
 
-  map<K extends keyof T, L extends keyof P>(name1: keyof T, name2: keyof P): ObjectsVerifier<T, P> {
+  private map<K extends keyof T, L extends keyof P>(name1: keyof T, name2: keyof P): ObjectsVerifier<T, P> {
     this._mapping.push([name1, name2]);
     return this;
   }
 
+  /**
+   * Allows to exclude some properties from the comparing process.
+   * @param params The names of a properties
+   */
   ignoring<K extends keyof T>(...params: K[]): ObjectsVerifier<T, P> {
     params.forEach((p) => this._ignore.add(p));
     return this;
   }
 
+  /**
+   * Allows to define exclusive collection of properties that should be checked under the comparing process.
+   * The method overrides any settings that were set by 'ignoring' method.
+   * @param params The names of a properties
+   */
   compareOnly<K extends keyof T>(...params: K[]): ObjectsVerifier<T, P> {
     params.forEach((p) => this._compareOnly.add(p));
     return this;

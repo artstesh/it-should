@@ -5,60 +5,6 @@ import { Times } from "../../src/verifiers/utils/times.counter";
 
 describe('StringVerifier', () => {
 
-  describe('not empty', () => {
-
-    it('null success', () =>{
-      expect(() => new StringVerifier(null).not.empty()).not.toThrow();
-    })
-    it('empty throws', () =>{
-      expect(() => new StringVerifier('').not.empty()).toThrow(ShouldError);
-    })
-    it('undefined success', () =>{
-      expect(() => new StringVerifier(undefined).not.empty()).not.toThrow();
-    })
-    it('not empty success', () =>{
-      const entry = Forger.create<string>();
-      //
-      expect(() => new StringVerifier(entry).not.empty()).not.toThrow();
-    })
-  })
-
-  describe('beNullOrEmpty', () => {
-
-    it('null success', () =>{
-      expect(() => new StringVerifier(null).nullOrEmpty()).not.toThrow();
-    })
-    it('empty throws', () =>{
-      expect(() => new StringVerifier('').nullOrEmpty()).not.toThrow();
-    })
-    it('undefined success', () =>{
-      expect(() => new StringVerifier(undefined).nullOrEmpty()).not.toThrow();
-    })
-    it('not empty success', () =>{
-      const entry = Forger.create<string>();
-      //
-      expect(() => new StringVerifier(entry).nullOrEmpty()).toThrow(ShouldError);
-    })
-  })
-
-  describe('notNullOrEmpty', () => {
-
-    it('null throws', () =>{
-      expect(() => new StringVerifier(null).not.nullOrEmpty()).toThrow(ShouldError);
-    })
-    it('empty throws', () =>{
-      expect(() => new StringVerifier('').not.nullOrEmpty()).toThrow(ShouldError);
-    })
-    it('undefined throws', () =>{
-      expect(() => new StringVerifier(undefined).not.nullOrEmpty()).toThrow(ShouldError);
-    })
-    it('not empty success', () =>{
-      const entry = Forger.create<string>();
-      //
-      expect(() => new StringVerifier(entry).not.nullOrEmpty()).not.toThrow();
-    })
-  })
-
   describe('empty', () => {
 
     it('null throws', () =>{
@@ -77,7 +23,64 @@ describe('StringVerifier', () => {
     })
   })
 
-  describe('beWhiteSpace', () => {
+  describe('not empty', () => {
+
+    it('null throws', () =>{
+      expect(() => new StringVerifier(null).not.empty()).toThrow(ShouldError);
+    })
+    it('empty throws', () =>{
+      expect(() => new StringVerifier('').not.empty()).toThrow(ShouldError);
+    })
+    it('undefined throws', () =>{
+      expect(() => new StringVerifier(undefined).not.empty()).toThrow(ShouldError);
+    })
+    it('not empty success', () =>{
+      const entry = Forger.create<string>();
+      //
+      expect(() => new StringVerifier(entry).not.empty()).not.toThrow();
+    })
+  })
+
+  describe('defined', () => {
+
+    it('null throws', () =>{
+      expect(() => new StringVerifier(null).defined()).toThrow(ShouldError);
+    })
+    it('empty throws', () =>{
+      expect(() => new StringVerifier('').defined()).not.toThrow();
+    })
+    it('undefined throws', () =>{
+      expect(() => new StringVerifier(undefined).defined()).toThrow(ShouldError);
+    })
+    it('not empty success', () =>{
+      const entry = Forger.create<string>();
+      //
+      expect(() => new StringVerifier(entry).defined()).not.toThrow();
+    })
+  })
+
+  describe('not defined', () => {
+
+    it('null success', () =>{
+      expect(() => new StringVerifier(null).not.defined()).not.toThrow();
+    })
+    it('empty throws', () =>{
+      expect(() => new StringVerifier('').not.defined()).toThrow(ShouldError);
+    })
+    it('undefined success', () =>{
+      expect(() => new StringVerifier(undefined).not.defined()).not.toThrow();
+    })
+    it('not empty success', () =>{
+      const entry = Forger.create<string>();
+      //
+      expect(() => new StringVerifier(entry).not.defined()).toThrow(ShouldError);
+    })
+  })
+
+  describe('whitespace', () => {
+    it('empty success', () =>{
+      expect(() => new StringVerifier('').whitespace()).not.toThrow();
+    })
 
     it('null throws', () =>{
       expect(() => new StringVerifier(null).whitespace()).toThrow(ShouldError);
@@ -100,12 +103,17 @@ describe('StringVerifier', () => {
 
   describe('not whitespace', () => {
 
-    it('null success', () =>{
-      expect(() => new StringVerifier(null).not.whitespace()).not.toThrow();
+    it('null throws', () =>{
+      expect(() => new StringVerifier(null).not.whitespace()).toThrow(ShouldError);
     })
-    it('undefined success', () =>{
-      expect(() => new StringVerifier(undefined).not.whitespace()).not.toThrow();
+    it('undefined throws', () =>{
+      expect(() => new StringVerifier(undefined).not.whitespace()).toThrow(ShouldError);
     })
+
+    it('empty throws', () =>{
+      expect(() => new StringVerifier('').not.whitespace()).toThrow(ShouldError);
+    })
+
     it('not empty success', () =>{
       const entry = Forger.create<string>();
       //
@@ -119,7 +127,7 @@ describe('StringVerifier', () => {
     })
   })
 
-  describe('beUpperCased', () => {
+  describe('upperCased', () => {
 
     it('null throws', () =>{
       expect(() => new StringVerifier(null).upperCased()).toThrow(ShouldError);
@@ -127,11 +135,14 @@ describe('StringVerifier', () => {
     it('undefined throws', () =>{
       expect(() => new StringVerifier(undefined).upperCased()).toThrow(ShouldError);
     })
+    it('empty success', () =>{
+      expect(() => new StringVerifier('').upperCased()).not.toThrow();
+    })
     it('whitespace success', () =>{
       expect(() => new StringVerifier(' ').upperCased()).not.toThrow();
     })
     it('not uppercased throws', () =>{
-      const entry = Forger.create<string>({stringUpCase: false, stringLength: 50});
+      const entry = Forger.create<string>({stringLength: 50});
       //
       expect(() => new StringVerifier(entry).upperCased()).toThrow(ShouldError);
     })
@@ -150,6 +161,9 @@ describe('StringVerifier', () => {
     it('undefined success', () =>{
       expect(() => new StringVerifier(undefined).not.upperCased()).toThrow(ShouldError);
     })
+    it('empty success', () =>{
+      expect(() => new StringVerifier('').not.upperCased()).not.toThrow();
+    })
     it('whitespace success', () =>{
       expect(() => new StringVerifier(' ').not.upperCased()).not.toThrow();
     })
@@ -167,14 +181,17 @@ describe('StringVerifier', () => {
 
   describe('not lowerCased', () => {
 
-    it('null success', () =>{
+    it('null throws', () =>{
       expect(() => new StringVerifier(null).not.lowerCased()).toThrow(ShouldError);
     })
-    it('undefined success', () =>{
+    it('undefined throws', () =>{
       expect(() => new StringVerifier(undefined).not.lowerCased()).toThrow(ShouldError);
     })
     it('whitespace success', () =>{
       expect(() => new StringVerifier(' ').not.lowerCased()).not.toThrow();
+    })
+    it('empty success', () =>{
+      expect(() => new StringVerifier('').not.lowerCased()).not.toThrow();
     })
     it('not uppercased throws', () =>{
       const entry = Forger.create<string>({stringUpCase: false, stringLength: 50});
@@ -188,7 +205,7 @@ describe('StringVerifier', () => {
     })
   })
 
-  describe('beLowerCased', () => {
+  describe('lowerCased', () => {
 
     it('null throws', () =>{
       expect(() => new StringVerifier(null).lowerCased()).toThrow(ShouldError);
@@ -213,11 +230,11 @@ describe('StringVerifier', () => {
 
   describe('equals', () => {
 
-    it('null success', () =>{
-      expect(() => new StringVerifier(null).equals(null)).not.toThrow();
+    it('null throws', () =>{
+      expect(() => new StringVerifier(null).equals(null)).toThrow(ShouldError);
     })
-    it('undefined success', () =>{
-      expect(() => new StringVerifier(undefined).equals(undefined)).not.toThrow();
+    it('undefined throws', () =>{
+      expect(() => new StringVerifier(undefined).equals(undefined)).toThrow(ShouldError);
     })
     it('empty success', () =>{
       expect(() => new StringVerifier('').equals('')).not.toThrow();
@@ -597,27 +614,27 @@ describe('StringVerifier', () => {
     it("entry undefined throws", () => {
       const expected = Forger.create<string[]>()!;
       //
-      expect(() => new StringVerifier(undefined).containsAny(expected)).toThrow(ShouldError);
+      expect(() => new StringVerifier(undefined).containsAny(...expected)).toThrow(ShouldError);
     });
 
     it("entry null throws", () => {
       const expected = Forger.create<string[]>()!;
       //
-      expect(() => new StringVerifier(null).containsAny(expected)).toThrow(ShouldError);
+      expect(() => new StringVerifier(null).containsAny(...expected)).toThrow(ShouldError);
     });
 
     it("not contains throws", () => {
       const expected = Forger.create<string[]>()!;
       const entry = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).containsAny(expected)).toThrow(ShouldError);
+      expect(() => new StringVerifier(entry).containsAny(...expected)).toThrow(ShouldError);
     });
 
     it("contains success", () => {
       const expected = Forger.create<string[]>()!;
       const entry = Forger.create<string>()! + new Array(1).fill(expected[0]).join('');
       //
-      expect(() => new StringVerifier(entry).containsAny(expected)).not.toThrow();
+      expect(() => new StringVerifier(entry).containsAny(...expected)).not.toThrow();
     });
   })
 
@@ -626,27 +643,27 @@ describe('StringVerifier', () => {
     it("entry undefined throws", () => {
       const expected = Forger.create<string[]>()!;
       //
-      expect(() => new StringVerifier(undefined).containsAnyIgnoreCase(expected)).toThrow(ShouldError);
+      expect(() => new StringVerifier(undefined).containsAnyIgnoreCase(...expected)).toThrow(ShouldError);
     });
 
     it("entry null throws", () => {
       const expected = Forger.create<string[]>()!;
       //
-      expect(() => new StringVerifier(null).containsAnyIgnoreCase(expected)).toThrow(ShouldError);
+      expect(() => new StringVerifier(null).containsAnyIgnoreCase(...expected)).toThrow(ShouldError);
     });
 
     it("not contains throws", () => {
       const expected = Forger.create<string[]>()!;
       const entry = Forger.create<string>()!;
       //
-      expect(() => new StringVerifier(entry).containsAnyIgnoreCase(expected)).toThrow(ShouldError);
+      expect(() => new StringVerifier(entry).containsAnyIgnoreCase(...expected)).toThrow(ShouldError);
     });
 
     it("contains success", () => {
       const expected = Forger.create<string[]>()!;
       const entry = Forger.create<string>()! + new Array(1).fill(expected[0]).join('');
       //
-      expect(() => new StringVerifier(entry).containsAnyIgnoreCase(expected)).not.toThrow();
+      expect(() => new StringVerifier(entry).containsAnyIgnoreCase(...expected)).not.toThrow();
     });
   })
 })

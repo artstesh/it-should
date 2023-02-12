@@ -1,5 +1,6 @@
 import { AbstractVerifier } from "./abstract.verifier";
 import { OrderingComparer } from "./utils/ordering.comparer";
+import { ArrayOrderedSettings } from "../models/array-ordered.settings";
 
 /**
  * An inspector responsible for an array verifications
@@ -12,19 +13,32 @@ export class ArrayVerifier<T> extends AbstractVerifier {
   /**
    * Makes sure that the examined array has no items
    * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
-   * @throws {@link ShouldError} if the array is empty
+   * @throws {@link ShouldError} if the array is not empty
    */
   empty = (): ArrayVerifier<T> => this.manage(this.checkDefined() && !this.entry?.length, `The collection is empty.`);
 
-  hasLength = (l: number): ArrayVerifier<T> =>
-    this.manage(this.checkDefined() && this.entry?.length === l, `The collection's length is not ${l}.`);
+  /**
+   * Makes sure that the examined array has the expected number of items
+   * @param expected The expected length of the array
+   * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
+   * @throws {@link ShouldError} if the array's length is not as the expected one.
+   */
+  hasLength = (expected: number): ArrayVerifier<T> =>
+    this.manage(this.checkDefined() && this.entry?.length === expected, `The collection's length is not ${expected}.`);
 
-  ordered(dir: 'asc' | 'desc' = 'asc', by: (e?: T | null) => any = (x) => x): ArrayVerifier<T> {
+  /**
+   * Makes sure that the examined array is ordered properly
+   * @param settings {@link ArrayOrderedSettings}
+   * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
+   * @throws {@link ShouldError} if the array's order is not as the expected one.
+   */
+  ordered(settings?: ArrayOrderedSettings<T>): ArrayVerifier<T> {
     this.checkDefined();
     let result = true;
+    if (!settings) settings = new ArrayOrderedSettings<T>();
     this.entry?.forEach((e, i) => {
       if (!result || i === this.entry!.length - 1) return;
-      result = OrderingComparer.general(by(this.entry![i]), by(this.entry![i + 1]), dir);
+      result = OrderingComparer.general(settings?.by!(this.entry![i]), settings?.by!(this.entry![i + 1]), settings?.dir);
     });
     this.manage(result, `Elements aren't ordered.`);
     return this;

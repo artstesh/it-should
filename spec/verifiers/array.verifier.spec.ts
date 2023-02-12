@@ -105,7 +105,7 @@ describe('ArrayVerifier', () => {
       it('success desc', () => {
         let entry: string[] = Forger.create<string[]>()!.sort((f, s) => f > s ? -1 : 1);
         //
-        expect(() => new ArrayVerifier(entry).ordered('desc')).not.toThrow();
+        expect(() => new ArrayVerifier(entry).ordered({dir: 'desc'})).not.toThrow();
       })
 
       it('throws asc', () => {
@@ -115,9 +115,9 @@ describe('ArrayVerifier', () => {
       })
 
       it('throws desc', () => {
-        let entry: string[] = Forger.create<string[]>()!;
+        let entry: string[] = Forger.create<string[]>({arrayLength: 10})!;
         //
-        expect(() => new ArrayVerifier(entry).ordered('desc')).toThrow(ShouldError);
+        expect(() => new ArrayVerifier(entry).ordered({dir: 'desc'})).toThrow(ShouldError);
       })
     })
     describe('with not', () => {
@@ -136,7 +136,7 @@ describe('ArrayVerifier', () => {
       it('success desc', () => {
         let entry: string[] = Forger.create<string[]>({arrayLength: 10})!;
         //
-        expect(() => new ArrayVerifier(entry).not.ordered('desc')).not.toThrow();
+        expect(() => new ArrayVerifier(entry).not.ordered({dir: 'desc'})).not.toThrow();
       })
 
       it('throws asc', () => {
@@ -148,7 +148,7 @@ describe('ArrayVerifier', () => {
       it('throws desc', () => {
         let entry: string[] = Forger.create<string[]>()!.sort((f, s) => f > s ? -1 : 1);
         //
-        expect(() => new ArrayVerifier(entry).not.ordered('desc')).toThrow(ShouldError);
+        expect(() => new ArrayVerifier(entry).not.ordered({dir: 'desc'})).toThrow(ShouldError);
       })
     })
   })

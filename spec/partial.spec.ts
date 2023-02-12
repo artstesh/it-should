@@ -3,7 +3,8 @@ import { should } from "../src";
 
 describe("isolated", () => {
   it("success asc", () => {
-    let entry: string[] = Forger.create<string[]>({ arrayLength: 10 })!;
+    interface Student {name: string, age: number}
+    let entry: Student[] = Forger.create<Student[]>({ arrayLength: 10 })!;
     //
     should().array(entry).not.ordered();
   });
