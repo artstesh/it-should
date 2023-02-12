@@ -35,7 +35,7 @@ export class ArrayVerifier<T> extends AbstractVerifier {
   ordered(settings?: ArrayOrderedSettings<T>): ArrayVerifier<T> {
     this.checkDefined();
     let result = true;
-    if (!settings) settings = new ArrayOrderedSettings<T>();
+    settings = ArrayOrderedSettings.fix(settings);
     this.entry?.forEach((e, i) => {
       if (!result || i === this.entry!.length - 1) return;
       result = OrderingComparer.general(

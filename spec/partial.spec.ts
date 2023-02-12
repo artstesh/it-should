@@ -1,11 +1,11 @@
 import { Forger } from "@artstesh/forger";
-import { should } from "../src";
+import { ArrayVerifier, should } from "../src";
+import { ShouldError } from "../src/models/should.error";
 
 describe("isolated", () => {
   it("success asc", () => {
-    interface Student {name: string, age: number}
-    let entry: Student[] = Forger.create<Student[]>({ arrayLength: 10 })!;
+    let entry: string[] = Forger.create<string[]>({arrayLength: 10})!;
     //
-    should().array(entry).not.ordered();
+    expect(() => new ArrayVerifier(entry).ordered({dir: 'desc'})).toThrow(ShouldError);
   });
 });
