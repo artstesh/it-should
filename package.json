@@ -1,7 +1,7 @@
 {
   "name": "@artstesh/it-should",
   "version": "1.0.0",
-  "description": "A legal way to forge everything you want ;)",
+  "description": "It should work!.. Shouldn't? ;)",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "homepage": "https://it-should.artstesh.ru",
