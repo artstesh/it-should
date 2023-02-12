@@ -1,6 +1,6 @@
-import { AbstractVerifier } from "./abstract.verifier";
-import { OrderingComparer } from "./utils/ordering.comparer";
-import { ArrayOrderedSettings } from "../models/array-ordered.settings";
+import { AbstractVerifier } from './abstract.verifier';
+import { OrderingComparer } from './utils/ordering.comparer';
+import { ArrayOrderedSettings } from '../models/array-ordered.settings';
 
 /**
  * An inspector responsible for an array verifications
@@ -38,7 +38,11 @@ export class ArrayVerifier<T> extends AbstractVerifier {
     if (!settings) settings = new ArrayOrderedSettings<T>();
     this.entry?.forEach((e, i) => {
       if (!result || i === this.entry!.length - 1) return;
-      result = OrderingComparer.general(settings?.by!(this.entry![i]), settings?.by!(this.entry![i + 1]), settings?.dir);
+      result = OrderingComparer.general(
+        settings?.by!(this.entry![i]),
+        settings?.by!(this.entry![i + 1]),
+        settings?.dir,
+      );
     });
     this.manage(result, `Elements aren't ordered.`);
     return this;

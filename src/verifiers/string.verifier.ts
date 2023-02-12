@@ -28,8 +28,10 @@ export class StringVerifier extends AbstractVerifier {
    * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
    */
   whitespace = (): StringVerifier =>
-    this.manage(this.checkDefined() && this.entry?.replaceAll(' ', '')?.length === 0,
-      `'${this.entry} 'is not whitespace.`);
+    this.manage(
+      this.checkDefined() && this.entry?.replaceAll(' ', '')?.length === 0,
+      `'${this.entry} 'is not whitespace.`,
+    );
 
   /**
    * Makes sure that the examined string has no lowercase characters
@@ -62,8 +64,10 @@ export class StringVerifier extends AbstractVerifier {
    * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
    */
   hasLength = (expected: number): StringVerifier =>
-    this.manage(this.checkDefined() && this.entry?.length === expected,
-      `'${this.entry}' doesn't equal expected length ${expected}.`);
+    this.manage(
+      this.checkDefined() && this.entry?.length === expected,
+      `'${this.entry}' doesn't equal expected length ${expected}.`,
+    );
 
   /**
    * Makes sure that the examined string has the same content as the expected one, case-sensitive.

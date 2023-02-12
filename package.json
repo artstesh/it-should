@@ -19,12 +19,10 @@
   },
   "keywords": [
     "assert",
-    "forger",
-    "autofixture",
-    "mock",
-    "typescript",
-    "fixture",
-    "randomizer",
+    "test",
+    "expect",
+    "compare",
+    "should",
     "tdd"
   ],
   "author": "artstesh",

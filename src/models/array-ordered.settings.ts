@@ -12,6 +12,6 @@ export class ArrayOrderedSettings<T> {
 
   constructor() {
     this.by = (x) => x;
-    this.dir  = 'asc';
+    this.dir = 'asc';
   }
 }
