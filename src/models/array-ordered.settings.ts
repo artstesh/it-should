@@ -15,7 +15,7 @@ export class ArrayOrderedSettings<T> {
     this.dir = 'asc';
   }
 
-  public static fix<T>(model?: ArrayOrderedSettings<T>): ArrayOrderedSettings<T>{
+  public static fix<T>(model?: ArrayOrderedSettings<T>): ArrayOrderedSettings<T> {
     const result = new ArrayOrderedSettings<T>();
     if (model?.by) result.by = model.by;
     if (model?.dir) result.dir = model.dir;

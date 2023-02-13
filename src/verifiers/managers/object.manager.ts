@@ -1,19 +1,19 @@
-import { ShouldError } from "../../models/should.error";
+import { ShouldError } from '../../models/should.error';
 
 export class ObjectManager<T> {
   private entry: T;
   private props = new Set<string>();
   private ignoring = new Set<string>();
-  private mapping: {[name: string]: string} = {};
+  private mapping: { [name: string]: string } = {};
 
   private get _filteredProps(): Set<keyof T> {
     const result = new Set<keyof T>();
-    this.props.forEach(pp => !this.ignoring.has(pp) && result.add(pp as keyof T));
+    this.props.forEach((pp) => !this.ignoring.has(pp) && result.add(pp as keyof T));
     return result;
   }
 
   constructor(entry: T) {
-    if (!entry) throw new ShouldError("The object is not defined.");
+    if (!entry) throw new ShouldError('The object is not defined.');
     if (typeof entry !== 'object') throw new ShouldError(`Illegal try to compare '${typeof entry}' as object.`);
     this.entry = entry;
     this.defineProps();
@@ -24,7 +24,7 @@ export class ObjectManager<T> {
    * @param params The names of a properties
    */
   compareOnly(...params: string[]): void {
-    this.props.forEach(p => !params.find(pr => pr === p) && this.props.delete(p));
+    this.props.forEach((p) => !params.find((pr) => pr === p) && this.props.delete(p));
   }
 
   /**
@@ -32,7 +32,7 @@ export class ObjectManager<T> {
    * @param params The names of a properties
    */
   ignore(...params: string[]): void {
-    params.forEach(p => this.ignoring.add(p));
+    params.forEach((p) => this.ignoring.add(p));
   }
 
   /**
@@ -57,7 +57,8 @@ export class ObjectManager<T> {
   }
 
   private defineProps(): void {
-    Object.keys(this.entry).filter((k) => typeof (this.entry as any)[k] !== "function")
-      .forEach(k => this.props.add(k));
+    Object.keys(this.entry)
+      .filter((k) => typeof (this.entry as any)[k] !== 'function')
+      .forEach((k) => this.props.add(k));
   }
 }

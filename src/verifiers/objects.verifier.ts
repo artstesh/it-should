@@ -1,5 +1,5 @@
-import { AbstractVerifier } from "./abstract.verifier";
-import { ObjectManager } from "./managers/object.manager";
+import { AbstractVerifier } from './abstract.verifier';
+import { ObjectManager } from './managers/object.manager';
 
 /**
  * An inspector responsible for comparison of objects
@@ -30,7 +30,7 @@ export class ObjectsVerifier<T, P> extends AbstractVerifier {
    * @param checker A function that defines a way of comparing of the properties
    */
   rule<K extends keyof T>(prop: K, checker: (o1: T[K], o2: T[K]) => boolean): ObjectsVerifier<T, P> {
-    this._rules[prop + ""] = checker;
+    this._rules[prop + ''] = checker;
     return this;
   }
 
@@ -40,7 +40,7 @@ export class ObjectsVerifier<T, P> extends AbstractVerifier {
    * @param name2 The name of the property of the second object
    */
   map<K extends keyof T, L extends keyof P>(name1: keyof T, name2: keyof P): ObjectsVerifier<T, P> {
-    this.otherManager.map( name1+'',name2+'');
+    this.otherManager.map(name1 + '', name2 + '');
     return this;
   }
 
@@ -49,8 +49,8 @@ export class ObjectsVerifier<T, P> extends AbstractVerifier {
    * @param params The names of a properties
    */
   ignoring(...params: (keyof T | keyof P)[]): ObjectsVerifier<T, P> {
-    this.entryManager.ignore(...params.map(p => p+''));
-    this.otherManager.ignore(...params.map(p => p+''));
+    this.entryManager.ignore(...params.map((p) => p + ''));
+    this.otherManager.ignore(...params.map((p) => p + ''));
     return this;
   }
 
@@ -60,27 +60,26 @@ export class ObjectsVerifier<T, P> extends AbstractVerifier {
    * @param params The names of a properties
    */
   compareOnly<K extends keyof T>(...params: (keyof T | keyof P)[]): ObjectsVerifier<T, P> {
-    this.entryManager.compareOnly(...params.map(p => p+''));
-    this.otherManager.compareOnly(...params.map(p => p+''));
+    this.entryManager.compareOnly(...params.map((p) => p + ''));
+    this.otherManager.compareOnly(...params.map((p) => p + ''));
     return this;
   }
 
   private compareKeys<Z, R>(obj1: ObjectManager<Z>, obj2: ObjectManager<R>): boolean {
     const props = obj1.getProperties();
-    this.manage(props.size === obj2.countProperties(),
-      'The objects has diffent number of properties.');
-    props.forEach(p => {
-      const val1 = obj1.getValue(p+'');
-      const val2 = obj2.getValue(p+'');
-      if (!!this._rules[p+''])
-        this.manage(this._rules[p+''](val1, val2), `Objects failed custom rule for '${p}'.`);
+    this.manage(props.size === obj2.countProperties(), 'The objects has diffent number of properties.');
+    props.forEach((p) => {
+      const val1 = obj1.getValue(p + '');
+      const val2 = obj2.getValue(p + '');
+      if (!!this._rules[p + '']) this.manage(this._rules[p + ''](val1, val2), `Objects failed custom rule for '${p}'.`);
       else if (val1 instanceof Date)
-        this.manage(val1?.toString() === val2?.toString(),
-          `Objects have different '${p}': ${val1?.toString()} & ${val2?.toString()}.`
+        this.manage(
+          val1?.toString() === val2?.toString(),
+          `Objects have different '${p}': ${val1?.toString()} & ${val2?.toString()}.`,
         );
-      else if (typeof val1 === "object") this.compareKeys(new ObjectManager(val1), new ObjectManager(val2));
+      else if (typeof val1 === 'object') this.compareKeys(new ObjectManager(val1), new ObjectManager(val2));
       else this.manage(val1 === val2, `Objects have different '${p}': ${val1} & ${val2}.`);
-    })
+    });
     return true;
   }
 }
