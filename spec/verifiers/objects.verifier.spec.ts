@@ -11,6 +11,134 @@ describe('ObjectsVerifier', () => {
     func: () => void;
   }
 
+  describe('rule', () => {
+    describe('direct', () => {
+
+      it('custom rule success', () => {
+        const entry = Forger.create<ITest>()!;
+        const exp = Forger.create<ITest>()!;
+        exp.id = entry.id;
+        exp.name = entry.name;
+        exp.isActive = entry.isActive;
+        //
+        expect(() => new ObjectsVerifier(entry,exp)
+          .rule('creation',(o1,o2)=> o1 != o2)
+          .equal()).not.toThrow();
+      })
+    });
+
+    describe('with not', () => {
+      it('custom rule throws', () => {
+        const entry = Forger.create<ITest>()!;
+        const exp = Forger.create<ITest>()!;
+        exp.id = entry.id;
+        exp.name = entry.name;
+        exp.isActive = entry.isActive;
+        //
+        expect(() => new ObjectsVerifier(entry,exp)
+          .rule('creation',(o1,o2)=> o1 != o2)
+          .not.equal()).toThrow(ShouldError);
+      })
+    })
+  })
+
+  describe('map', () => {
+    interface IMapTest { id: number; name: string; }
+    interface IMapOtherTest { id: number; fullName: string; }
+
+    describe('direct', () => {
+
+      it('custom rule success', () => {
+        const entry = Forger.create<IMapTest>()!;
+        const exp = Forger.create<IMapOtherTest>()!;
+        exp.id = entry.id;
+        exp.fullName = entry.name;
+        //
+        expect(() => new ObjectsVerifier(entry,exp)
+          .map('name', 'fullName').equal()).not.toThrow();
+      })
+
+      it('custom rule throws', () => {
+        const entry = Forger.create<IMapTest>()!;
+        const exp = Forger.create<IMapOtherTest>()!;
+        exp.id = entry.id;
+        //
+        expect(() => new ObjectsVerifier(entry,exp)
+          .map('name', 'fullName').equal()).toThrow(ShouldError);
+      })
+    });
+
+    describe('with not', () => {
+      it('custom rule throws', () => {
+        const entry = Forger.create<IMapTest>()!;
+        const exp = Forger.create<IMapOtherTest>()!;
+        exp.id = entry.id;
+        exp.fullName = entry.name;
+        //
+        expect(() => new ObjectsVerifier(entry,exp)
+          .map('name', 'fullName').not.equal()).toThrow(ShouldError);
+      })
+
+      it('custom rule throws', () => {
+        const entry = Forger.create<IMapTest>()!;
+        const exp = Forger.create<IMapOtherTest>()!;
+        exp.id = entry.id;
+        exp.fullName = entry.name;
+        //
+        expect(() => new ObjectsVerifier(entry,exp)
+          .map('name', 'fullName').not.equal()).toThrow(ShouldError);
+      })
+    })
+  })
+
+  describe('ignoring', () => {
+    interface IIgnoringTest { id: number; name: string;}
+    interface IIgnoring2Test { id: number; name: string; }
+    interface IIgnoring3Test { id: number; fullName: string; }
+
+    describe('direct', () => {
+
+      it('ignoring same prop success', () => {
+        const entry = Forger.create<IIgnoringTest>()!;
+        const exp = Forger.create<IIgnoring2Test>()!;
+        exp.name = entry.name;
+        //
+        expect(() => new ObjectsVerifier(entry,exp).ignoring('id')
+          .equal()).not.toThrow();
+      })
+
+      it('ignoring different prop success', () => {
+        const entry = Forger.create<IIgnoringTest>()!;
+        const exp = Forger.create<IIgnoring3Test>()!;
+        exp.id = entry.id;
+        //
+        expect(() => new ObjectsVerifier(entry,exp).ignoring('fullName', 'name')
+          .equal()).not.toThrow();
+      })
+    });
+
+    describe('with not', () => {
+
+      it('ignoring same prop success', () => {
+        const entry = Forger.create<IIgnoringTest>()!;
+        const exp = Forger.create<IIgnoring2Test>()!;
+        exp.name = entry.name;
+        //
+        expect(() => new ObjectsVerifier(entry,exp).ignoring('id')
+          .equal()).not.toThrow(ShouldError);
+      })
+
+      it('ignoring different prop success', () => {
+        const entry = Forger.create<IIgnoringTest>()!;
+        const exp = Forger.create<IIgnoring3Test>()!;
+        exp.id = entry.id;
+        //
+        expect(() => new ObjectsVerifier(entry,exp).not.ignoring('fullName', 'name')
+          .equal()).toThrow(ShouldError);
+      })
+    })
+  })
+
   describe('equal', () => {
     describe('direct', () => {
       it('original not defined throws', () => {
@@ -46,18 +174,6 @@ describe('ObjectsVerifier', () => {
         exp.isActive = entry.isActive;
         //
         expect(() => new ObjectsVerifier(entry,exp).ignoring('creation').equal()).not.toThrow();
-      })
-
-      it('custom rule success', () => {
-        const entry = Forger.create<ITest>()!;
-        const exp = Forger.create<ITest>()!;
-        exp.id = entry.id;
-        exp.name = entry.name;
-        exp.isActive = entry.isActive;
-        //
-        expect(() => new ObjectsVerifier(entry,exp)
-          .rule('creation',(o1,o2)=> o1 != o2)
-          .equal()).not.toThrow();
       })
 
       it('compareOnly success', () => {
@@ -102,18 +218,6 @@ describe('ObjectsVerifier', () => {
         exp.isActive = entry.isActive;
         //
         expect(() => new ObjectsVerifier(entry,exp).ignoring('creation').not.equal()).toThrow(ShouldError);
-      })
-
-      it('custom rule throws', () => {
-        const entry = Forger.create<ITest>()!;
-        const exp = Forger.create<ITest>()!;
-        exp.id = entry.id;
-        exp.name = entry.name;
-        exp.isActive = entry.isActive;
-        //
-        expect(() => new ObjectsVerifier(entry,exp)
-          .rule('creation',(o1,o2)=> o1 != o2)
-          .not.equal()).toThrow(ShouldError);
       })
 
       it('compareOnly throws', () => {

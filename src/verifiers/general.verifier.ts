@@ -37,7 +37,7 @@ export class GeneralVerifier {
    * @param other The second object that should be examined
    * @returns {@link ObjectsVerifier}
    */
-  public objects<T, P>(entry: T | null | undefined, other: P | null | undefined): ObjectsVerifier<T, P> {
+  public objects<T, P>(entry: T, other: P): ObjectsVerifier<T, P> {
     return new ObjectsVerifier(entry, other);
   }
 
