@@ -1,4 +1,4 @@
-import { ShouldError } from '../models/should.error';
+import { ShouldError } from "../models/should.error";
 
 export abstract class AbstractVerifier {
   protected notIsActivated = false;

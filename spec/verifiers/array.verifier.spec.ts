@@ -1,6 +1,6 @@
 import { Forger } from "@artstesh/forger";
 import { ShouldError } from "../../src/models/should.error";
-import { ArrayVerifier } from "../../src/verifiers/array.verifier";
+import { ArrayVerifier } from "../../src";
 
 describe('ArrayVerifier', () => {
 
@@ -51,19 +51,19 @@ describe('ArrayVerifier', () => {
         let entry: string[];
         const expectedLength = Forger.create<number>()!;
         //
-        expect(() => new ArrayVerifier(entry).hasLength(expectedLength)).toThrow(ShouldError);
+        expect(() => new ArrayVerifier(entry).length(expectedLength)).toThrow(ShouldError);
       })
 
       it('success', () => {
         let entry: string[] = Forger.create<string[]>()!;
         //
-        expect(() => new ArrayVerifier(entry).hasLength(entry.length)).not.toThrow();
+        expect(() => new ArrayVerifier(entry).length(entry.length)).not.toThrow();
       })
 
       it('throws', () => {
         let entry: string[] = Forger.create<string[]>()!;
         //
-        expect(() => new ArrayVerifier(entry).hasLength(entry.length + 1)).toThrow(ShouldError);
+        expect(() => new ArrayVerifier(entry).length(entry.length + 1)).toThrow(ShouldError);
       })
     })
     describe('with not', () => {
@@ -71,19 +71,178 @@ describe('ArrayVerifier', () => {
         const expectedLength = Forger.create<number>()!;
         let entry: string[];
         //
-        expect(() => new ArrayVerifier(entry).not.hasLength(expectedLength)).toThrow(ShouldError);
+        expect(() => new ArrayVerifier(entry).not.length(expectedLength)).toThrow(ShouldError);
       })
 
       it('success', () => {
         let entry: string[] = Forger.create<string[]>()!;
         //
-        expect(() => new ArrayVerifier(entry).not.hasLength(entry.length - 1)).not.toThrow();
+        expect(() => new ArrayVerifier(entry).not.length(entry.length - 1)).not.toThrow();
       })
 
       it('throws', () => {
         let entry: string[] = Forger.create<string[]>()!;
         //
-        expect(() => new ArrayVerifier(entry).not.hasLength(entry.length)).toThrow(ShouldError);
+        expect(() => new ArrayVerifier(entry).not.length(entry.length)).toThrow(ShouldError);
+      })
+    })
+  })
+
+  describe('contain', () => {
+    describe('direct', () => {
+      it('entry not defined throws', () => {
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry).contain(Forger.create<number>()!)).toThrow(ShouldError);
+      })
+
+      it('primitive success', () => {
+        let entry = Forger.create<string[]>()!;
+        const expected = entry[1]!;
+        //
+        expect(() => new ArrayVerifier(entry).contain(expected)).not.toThrow();
+      })
+
+      it('object success', () => {
+        interface ITest {id: number, name: string}
+        let entry = Forger.create<ITest[]>()!;
+        const expected: ITest = {id: Forger.create<number>()!, name: entry[0].name};
+        entry.push(expected);
+        //
+        expect(() => new ArrayVerifier(entry).contain(expected, e => e?.id)).not.toThrow();
+      })
+
+      it('throws if not contains', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        let expected: string = Forger.create<string>()!;
+        //
+        expect(() => new ArrayVerifier(entry).contain(expected)).toThrow(ShouldError);
+      })
+
+      it('success if contains a few', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        const expected = entry[0]!;
+        entry.push(...[expected]);
+        //
+        expect(() => new ArrayVerifier(entry).contain(expected)).not.toThrow();
+      })
+    })
+    describe('with not', () => {
+      it('entry not defined throws', () => {
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry).not.contain(Forger.create<number>()!)).toThrow(ShouldError);
+      })
+
+      it('primitive throws', () => {
+        let entry = Forger.create<string[]>()!;
+        const expected = entry[1]!;
+        //
+        expect(() => new ArrayVerifier(entry).not.contain(expected)).toThrow(ShouldError);
+      })
+
+      it('object throws', () => {
+        interface ITest {id: number, name: string}
+        let entry = Forger.create<ITest[]>()!;
+        const expected: ITest = {id: Forger.create<number>()!, name: entry[0].name};
+        entry.push(expected);
+        //
+        expect(() => new ArrayVerifier(entry).not.contain(expected, e => e?.id)).toThrow(ShouldError);
+      })
+
+      it('success if not contains', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        let expected: string = Forger.create<string>()!;
+        //
+        expect(() => new ArrayVerifier(entry).not.contain(expected)).not.toThrow();
+      })
+
+      it('throws if contains a few', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        const expected = entry[0]!;
+        entry.push(...[expected]);
+        //
+        expect(() => new ArrayVerifier(entry).not.contain(expected)).toThrow(ShouldError);
+      })
+    })
+  })
+
+  describe('containExactly', () => {
+    describe('direct', () => {
+      it('entry not defined throws', () => {
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry)
+          .containExactly(Forger.create<number>()!, Forger.create<number>()!))
+          .toThrow(ShouldError);
+      })
+
+      it('primitive success', () => {
+        let entry = Forger.create<string[]>()!;
+        const expected = entry[1]!;
+        //
+        expect(() => new ArrayVerifier(entry).containExactly(1, expected)).not.toThrow();
+      })
+
+      it('object success', () => {
+        interface ITest {id: number, name: string}
+        let entry = Forger.create<ITest[]>()!;
+        const expected: ITest = {id: Forger.create<number>()!, name: entry[0].name};
+        entry.push(expected);
+        //
+        expect(() => new ArrayVerifier(entry).containExactly(1, expected, e => e?.id)).not.toThrow();
+      })
+
+      it('throws if not contain', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        let expected: string = Forger.create<string>()!;
+        //
+        expect(() => new ArrayVerifier(entry).containExactly(1, expected)).toThrow(ShouldError);
+      })
+
+      it('throws if contain wrong number', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        const expected = entry[0]!;
+        //
+        expect(() => new ArrayVerifier(entry).containExactly(2, expected)).toThrow(ShouldError);
+      })
+    })
+    describe('with not', () => {
+      it('entry not defined throws', () => {
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry).not
+          .containExactly(Forger.create<number>()!, Forger.create<number>()!)).toThrow(ShouldError);
+      })
+
+      it('primitive throws', () => {
+        let entry = Forger.create<string[]>()!;
+        const expected = entry[1]!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containExactly(1, expected)).toThrow(ShouldError);
+      })
+
+      it('object throws', () => {
+        interface ITest {id: number, name: string}
+        let entry = Forger.create<ITest[]>()!;
+        const expected: ITest = {id: Forger.create<number>()!, name: entry[0].name};
+        entry.push(expected);
+        //
+        expect(() => new ArrayVerifier(entry).not.containExactly(1, expected, e => e?.id)).toThrow(ShouldError);
+      })
+
+      it('success if not contain', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        let expected: string = Forger.create<string>()!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containExactly(1, expected)).not.toThrow();
+      })
+
+      it('success if contain wrong number', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        const expected = entry[0]!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containExactly(2, expected)).not.toThrow();
       })
     })
   })

@@ -1,52 +1,36 @@
-import { NumberVerifier } from './number.verifier';
-import { StringVerifier } from './string.verifier';
-import { ObjectsVerifier } from './objects.verifier';
-import { ArrayVerifier } from './array.verifier';
+import { AbstractVerifier } from "./abstract.verifier";
 
 /**
- * The factory that provides a concrete inspector
+ * An inspector responsible for comparison of objects
  */
-export class GeneralVerifier {
-  private static instance = new GeneralVerifier();
-
-  private constructor() {}
-
-  public static getInstance = () => GeneralVerifier.instance;
-
-  /**
-   * Provides an inspector responsible for number verifications
-   * @param entry A number that should be examined
-   * @returns {@link NumberVerifier}
-   */
-  public number(entry: number | null | undefined): NumberVerifier {
-    return new NumberVerifier(entry);
+export class GeneralVerifier<T> extends AbstractVerifier {
+  constructor(protected entry: T) {
+    super();
   }
 
   /**
-   * Provides an inspector responsible for a string verifications
-   * @param entry A string that should be examined
-   * @returns {@link StringVerifier}
+   * Checking that the element is of some type
+   * @throws {@link ShouldError} if any of objects is not defined regardless the presence/absence of not() function.
+   * @throws {@link ShouldError} if the object has a different type.
    */
-  public string(entry: string | null | undefined): StringVerifier {
-    return new StringVerifier(entry);
+  public beTypeOf(
+    type: 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'object' | 'function' | DateConstructor,
+  ): this {
+    this.checkDefined();
+    if (type === Date) this.manage(this.entry instanceof Date, `${this.entry} is not of type ${type}`);
+    else this.manage(typeof this.entry === type, `${this.entry} is not of type ${type}`);
+    return this;
   }
 
   /**
-   * Provides an inspector responsible for comparison of objects
-   * @param entry The first object that should be examined
-   * @param other The second object that should be examined
-   * @returns {@link ObjectsVerifier}
+   * Makes sure that the examined string doesn't equal null or undefined
+   * @throws {@link ShouldError} if the string is not defined.
    */
-  public objects<T, P>(entry: T, other: P): ObjectsVerifier<T, P> {
-    return new ObjectsVerifier(entry, other);
-  }
+  defined = (): this =>
+    this.manage(this.entry != null, `'${this.entry}' is ${this.notIsActivated ? '' : 'not '}defined.`);
 
-  /**
-   * Provides an inspector responsible for an array verifications
-   * @param entry An array that should be examined
-   * @returns {@link ArrayVerifier}
-   */
-  public array<T>(entry: (T | null | undefined)[] | null | undefined): ArrayVerifier<T> {
-    return new ArrayVerifier(entry);
+  protected checkDefined(): boolean {
+    this.manage(this.entry != null, `The entry is ${this.notIsActivated ? '' : 'not '}defined`, true);
+    return true;
   }
 }

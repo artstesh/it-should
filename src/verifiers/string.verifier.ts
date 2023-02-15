@@ -1,12 +1,12 @@
-import { AbstractVerifier } from './abstract.verifier';
-import { SingleParamFunc } from './utils/verify.func';
+import { SingleParamFunc } from "./utils/verify.func";
+import { GeneralVerifier } from "./general.verifier";
 
 /**
  * An inspector responsible for a string verifications
  */
-export class StringVerifier extends AbstractVerifier {
-  constructor(private entry: string | null | undefined) {
-    super();
+export class StringVerifier extends GeneralVerifier<string | null | undefined> {
+  constructor(entry: string | null | undefined) {
+    super(entry);
   }
 
   /**
@@ -15,12 +15,6 @@ export class StringVerifier extends AbstractVerifier {
    * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
    */
   empty = (): StringVerifier => this.hasLength(0);
-
-  /**
-   * Makes sure that the examined string doesn't equal null or undefined
-   * @throws {@link ShouldError} if the string is not defined.
-   */
-  defined = (): StringVerifier => this.manage(this.entry != null, `'${this.entry}' is not defined.`);
 
   /**
    * Makes sure that the examined string contains only spaces or empty
@@ -137,10 +131,5 @@ export class StringVerifier extends AbstractVerifier {
       found =
         expected.map((e) => this.entry?.toUpperCase().indexOf(e.toUpperCase()) !== -1).filter((e) => e)?.length ?? 0;
     this.manage(found > 0, `'${this.entry}' doesn't contain any of [${expected.join(',')}].`);
-  }
-
-  private checkDefined(): boolean {
-    this.manage(this.entry != null, `The string is not defined`, true);
-    return true;
   }
 }

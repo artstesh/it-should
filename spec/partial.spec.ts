@@ -1,5 +1,5 @@
 import { Forger } from "@artstesh/forger";
-import { ArrayVerifier, should } from "../src";
+import { ArrayVerifier } from "../src";
 import { ShouldError } from "../src/models/should.error";
 
 describe("isolated", () => {

@@ -1,11 +1,11 @@
-import { AbstractVerifier } from './abstract.verifier';
+import { GeneralVerifier } from "./general.verifier";
 
 /**
  * An inspector responsible for number verifications
  */
-export class NumberVerifier extends AbstractVerifier {
-  constructor(private entry: number | null | undefined) {
-    super();
+export class NumberVerifier extends GeneralVerifier<number | null | undefined> {
+  constructor(entry: number | null | undefined) {
+    super(entry);
   }
 
   /**
