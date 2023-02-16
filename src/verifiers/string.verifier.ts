@@ -1,5 +1,5 @@
-import { SingleParamFunc } from "./utils/verify.func";
-import { GeneralVerifier } from "./general.verifier";
+import { SingleParamFunc } from './utils/verify.func';
+import { GeneralVerifier } from './general.verifier';
 
 /**
  * An inspector responsible for a string verifications

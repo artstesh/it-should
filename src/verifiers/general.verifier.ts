@@ -1,4 +1,4 @@
-import { AbstractVerifier } from "./abstract.verifier";
+import { AbstractVerifier } from './abstract.verifier';
 
 /**
  * An inspector responsible for comparison of objects

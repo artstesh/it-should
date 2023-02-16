@@ -1,4 +1,4 @@
-import { ShouldError } from "../../models/should.error";
+import { ShouldError } from '../../models/should.error';
 
 export class ObjectManager<T> {
   private entry: T;

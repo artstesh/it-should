@@ -1,8 +1,8 @@
-import { NumberVerifier } from "./number.verifier";
-import { StringVerifier } from "./string.verifier";
-import { ObjectsVerifier } from "./objects.verifier";
-import { ArrayVerifier } from "./array.verifier";
-import { GeneralVerifier } from "./general.verifier";
+import { NumberVerifier } from './number.verifier';
+import { StringVerifier } from './string.verifier';
+import { ObjectsVerifier } from './objects.verifier';
+import { ArrayVerifier } from './array.verifier';
+import { GeneralVerifier } from './general.verifier';
 
 /**
  * The factory that provides a concrete inspector

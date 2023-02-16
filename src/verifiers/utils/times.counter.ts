@@ -1,4 +1,4 @@
-import { SingleParamFunc } from "./verify.func";
+import { SingleParamFunc } from './verify.func';
 
 /**
  * Provides counting processors for inspectors

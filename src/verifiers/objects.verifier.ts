@@ -1,5 +1,5 @@
-import { AbstractVerifier } from "./abstract.verifier";
-import { ObjectManager } from "./managers/object.manager";
+import { AbstractVerifier } from './abstract.verifier';
+import { ObjectManager } from './managers/object.manager';
 
 /**
  * An inspector responsible for comparison of objects

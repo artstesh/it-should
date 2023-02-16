@@ -45,7 +45,7 @@ describe('ArrayVerifier', () => {
     })
   })
 
-  describe('hasLength', () => {
+  describe('length', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         let entry: string[];
@@ -308,6 +308,183 @@ describe('ArrayVerifier', () => {
         let entry: string[] = Forger.create<string[]>()!.sort((f, s) => f > s ? -1 : 1);
         //
         expect(() => new ArrayVerifier(entry).not.ordered({dir: 'desc'})).toThrow(ShouldError);
+      })
+    })
+  })
+
+  describe('containBy', () => {
+    describe('direct', () => {
+      it('entry not defined throws', () => {
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry).containBy(() => true)).toThrow(ShouldError);
+      })
+
+      it('primitive success', () => {
+        const stringLength = 5;
+        let entry = Forger.create<string[]>({stringLength})!;
+        //
+        expect(() => new ArrayVerifier(entry).containBy(e => e?.length === stringLength)).not.toThrow();
+      })
+
+      it('object success', () => {
+        const idMax = 500;
+        interface ITest {id: number, name: string}
+        let entry = Forger.create<ITest[]>({numberMax: idMax})!;
+        //
+        expect(() => new ArrayVerifier(entry).containBy(e => e!.id < idMax)).not.toThrow();
+      })
+
+      it('throws if not contains', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry).containBy(e => e!.length > 1000)).toThrow(ShouldError);
+      })
+    })
+    describe('with not', () => {
+      it('entry not defined throws', () => {
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry).not.containBy(() => true)).toThrow(ShouldError);
+      })
+
+      it('primitive throws', () => {
+        const stringLength = 5;
+        let entry = Forger.create<string[]>({stringLength})!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containBy(e => e?.length === stringLength)).toThrow(ShouldError);
+      })
+
+      it('object throws', () => {
+        const idMax = 500;
+        interface ITest {id: number, name: string}
+        let entry = Forger.create<ITest[]>({numberMax: idMax})!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containBy(e => e!.id < idMax)).toThrow(ShouldError);
+      })
+
+      it('success if not contains', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containBy(e => e!.length > 1000)).not.toThrow();
+      })
+    })
+  })
+
+  describe('containOnly', () => {
+    describe('direct', () => {
+      it('entry not defined throws', () => {
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry).containOnly(() => true)).toThrow(ShouldError);
+      })
+
+      it('primitive success', () => {
+        const stringLength = 5;
+        let entry = Forger.create<string[]>({stringLength})!;
+        //
+        expect(() => new ArrayVerifier(entry).containOnly(e => e?.length === stringLength)).not.toThrow();
+      })
+
+      it('object success', () => {
+        const idMax = 500;
+        interface ITest {id: number, name: string}
+        let entry = Forger.create<ITest[]>({numberMax: idMax})!;
+        //
+        expect(() => new ArrayVerifier(entry).containOnly(e => e!.id < idMax)).not.toThrow();
+      })
+
+      it('throws if not contains', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry).containOnly(e => e!.length > 1000)).toThrow(ShouldError);
+      })
+    })
+    describe('with not', () => {
+      it('entry not defined throws', () => {
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry).not.containOnly(() => true)).toThrow(ShouldError);
+      })
+
+      it('primitive throws', () => {
+        const stringLength = 5;
+        let entry = Forger.create<string[]>({stringLength})!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containOnly(e => e?.length === stringLength)).toThrow(ShouldError);
+      })
+
+      it('object throws', () => {
+        const idMax = 500;
+        interface ITest {id: number, name: string}
+        let entry = Forger.create<ITest[]>({numberMax: idMax})!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containOnly(e => e!.id < idMax)).toThrow(ShouldError);
+      })
+
+      it('success if not contains', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containOnly(e => e!.length > 1000)).not.toThrow();
+      })
+    })
+  })
+
+  describe('containByExactly', () => {
+    describe('direct', () => {
+      it('entry not defined throws', () => {
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry).containByExactly(3,() => true)).toThrow(ShouldError);
+      })
+
+      it('primitive success', () => {
+        const stringLength = 5;
+        let entry = Forger.create<string[]>({stringLength})!;
+        //
+        expect(() => new ArrayVerifier(entry).containByExactly(3,e => e?.length === stringLength)).not.toThrow();
+      })
+
+      it('object success', () => {
+        const idMax = 500;
+        interface ITest {id: number, name: string}
+        let entry = Forger.create<ITest[]>({numberMax: idMax})!;
+        //
+        expect(() => new ArrayVerifier(entry).containByExactly(3,e => e!.id < idMax)).not.toThrow();
+      })
+
+      it('throws if not contains', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry).containByExactly(3,e => e!.length > 1000)).toThrow(ShouldError);
+      })
+    })
+    describe('with not', () => {
+      it('entry not defined throws', () => {
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry).not.containByExactly(3,() => true)).toThrow(ShouldError);
+      })
+
+      it('primitive throws', () => {
+        const stringLength = 5;
+        let entry = Forger.create<string[]>({stringLength})!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containByExactly(3,e => e?.length === stringLength)).toThrow(ShouldError);
+      })
+
+      it('object throws', () => {
+        const idMax = 500;
+        interface ITest {id: number, name: string}
+        let entry = Forger.create<ITest[]>({numberMax: idMax})!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containByExactly(3,e => e!.id < idMax)).toThrow(ShouldError);
+      })
+
+      it('success if not contains', () => {
+        let entry: string[] = Forger.create<string[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry).not.containByExactly(3,e => e!.length > 1000)).not.toThrow();
       })
     })
   })

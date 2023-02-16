@@ -1,6 +1,6 @@
-import { OrderingComparer } from "./utils/ordering.comparer";
-import { ArrayOrderedSettings } from "../models/array-ordered.settings";
-import { GeneralVerifier } from "./general.verifier";
+import { OrderingComparer } from './utils/ordering.comparer';
+import { ArrayOrderedSettings } from '../models/array-ordered.settings';
+import { GeneralVerifier } from './general.verifier';
 
 /**
  * An inspector responsible for an array verifications
@@ -53,6 +53,8 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
    * @param expected The element that is expected
    * @param identifier A function that allows to identify an element as the expected one.
    * The function is actual for objects first of all, and shouldn't be defined in case of primitives.
+   * @throws {@link ShouldError} if there are no expected elements in the array.
+   * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
    */
   contain(expected: T, identifier: (e?: T | null) => any = (x) => x): ArrayVerifier<T> {
     this.checkDefined();
@@ -69,6 +71,8 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
    * @param expected The element that is expected
    * @param identifier A function that allows to identify an element as the expected one.
    * The function is actual for objects first of all, and shouldn't be defined in case of primitives.
+   * @throws {@link ShouldError} if the number of the expected elements in the array is not correct.
+   * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
    */
   containExactly(times: number, expected: T, identifier: (e?: T | null) => any = (x) => x): ArrayVerifier<T> {
     this.checkDefined();
@@ -76,6 +80,50 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
     if (!!identifier) result = this.entry?.filter((e) => identifier(e) === identifier(expected))?.length ?? 0;
     else result = this.entry?.filter((e) => e === expected)?.length ?? 0;
     this.manage(result === times, `The collection has ${result} elements instead of one.`);
+    return this;
+  }
+
+  /**
+   * Makes sure that the examined array contains only elements that follow the condition
+   * @param condition A function that describes the condition.
+   * @throws {@link ShouldError} if the number of the expected elements in the array is not correct.
+   * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
+   */
+  containOnly(condition: (e?: T | null) => boolean): ArrayVerifier<T> {
+    this.checkDefined();
+    this.manage(
+      !this.entry?.filter((e) => !condition(e))?.length,
+      `The collection doesn't contain the expected element.`,
+    );
+    return this;
+  }
+
+  /**
+   * Makes sure that the examined array contains at least one element that follows the condition
+   * @param condition A function that describes the condition.
+   * @throws {@link ShouldError} if there are no expected elements in the array.
+   * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
+   */
+  containBy(condition: (e?: T | null) => boolean): ArrayVerifier<T> {
+    this.checkDefined();
+    this.manage(
+      !!this.entry?.filter((e) => condition(e))?.length,
+      `The collection doesn't contain the expected element.`,
+    );
+    return this;
+  }
+
+  /**
+   * Makes sure that the examined array contains the expected number of elements that follow the condition
+   * @param condition A function that describes the condition.
+   * @param times The number of times the element should be presented in the collection
+   * @throws {@link ShouldError} if the number of the expected elements in the array is not correct.
+   * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
+   */
+  containByExactly(times: number, condition: (e?: T | null) => boolean): ArrayVerifier<T> {
+    this.checkDefined();
+    const result = this.entry?.filter((e) => condition(e))?.length ?? 0;
+    this.manage(result === times, `The collection doesn't contain the expected element.`);
     return this;
   }
 
@@ -88,10 +136,6 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
   // HaveCountLessThan
   // StartWith([],identifier: (e?: T | null) => any = x => x)
   // EndWith([],identifier: (e?: T | null) => any = x => x)
-  // haveByCondition(x => x > 3, expected: number)
-  // OnlyContain(x => x > 3)
   // array.onlyContain(condition: (e?: T | null) => boolean);
-  // array.ContainBy(condition: (e?: T | null) => boolean);
-  // array.ContainByExactly(times: number, condition: (e?: T | null) => boolean);
   // ?? HaveElementAt(2, 5)
 }

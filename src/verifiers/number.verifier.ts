@@ -1,4 +1,4 @@
-import { GeneralVerifier } from "./general.verifier";
+import { GeneralVerifier } from './general.verifier';
 
 /**
  * An inspector responsible for number verifications
