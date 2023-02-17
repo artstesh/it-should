@@ -15,6 +15,15 @@ export class VerifierFactory {
   public static getInstance = () => VerifierFactory.instance;
 
   /**
+   * Provides an inspector responsible for an array verifications
+   * @param entry An array that should be examined
+   * @returns {@link ArrayVerifier}
+   */
+  public array<T>(entry: (T | null | undefined)[] | null | undefined): ArrayVerifier<T> {
+    return new ArrayVerifier(entry);
+  }
+
+  /**
    * Provides an inspector responsible for common verifications
    * @param entry An element that should be examined
    * @returns {@link GeneralVerifier}
@@ -33,15 +42,6 @@ export class VerifierFactory {
   }
 
   /**
-   * Provides an inspector responsible for a string verifications
-   * @param entry A string that should be examined
-   * @returns {@link StringVerifier}
-   */
-  public string(entry: string | null | undefined): StringVerifier {
-    return new StringVerifier(entry);
-  }
-
-  /**
    * Provides an inspector responsible for comparison of objects
    * @param entry The first object that should be examined
    * @param other The second object that should be examined
@@ -52,11 +52,11 @@ export class VerifierFactory {
   }
 
   /**
-   * Provides an inspector responsible for an array verifications
-   * @param entry An array that should be examined
-   * @returns {@link ArrayVerifier}
+   * Provides an inspector responsible for a string verifications
+   * @param entry A string that should be examined
+   * @returns {@link StringVerifier}
    */
-  public array<T>(entry: (T | null | undefined)[] | null | undefined): ArrayVerifier<T> {
-    return new ArrayVerifier(entry);
+  public string(entry: string | null | undefined): StringVerifier {
+    return new StringVerifier(entry);
   }
 }
