@@ -3,6 +3,7 @@ import { StringVerifier } from './string.verifier';
 import { ObjectsVerifier } from './objects.verifier';
 import { ArrayVerifier } from './array.verifier';
 import { GeneralVerifier } from './general.verifier';
+import { DateVerifier } from "./date.verifier";
 
 /**
  * The factory that provides a concrete inspector
@@ -58,5 +59,14 @@ export class VerifierFactory {
    */
   public string(entry: string | null | undefined): StringVerifier {
     return new StringVerifier(entry);
+  }
+
+  /**
+   * Provides an inspector responsible for a Date verifications
+   * @param entry A Date that should be examined
+   * @returns {@link StringVerifier}
+   */
+  public date(entry: Date | string | null | undefined): DateVerifier {
+    return new DateVerifier(entry);
   }
 }
