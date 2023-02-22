@@ -6,5 +6,6 @@ export * from './verifiers/objects.verifier';
 export * from './verifiers/should.func';
 export * from './verifiers/string.verifier';
 export * from './verifiers/general.verifier';
+export * from './verifiers/date.verifier';
 export * from './verifiers/utils/times.counter';
 export * from './models/array-ordered.settings';
