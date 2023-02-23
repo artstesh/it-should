@@ -32,7 +32,7 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   before = (then: Date | string): DateVerifier =>
-    this.manage(this.checkDefined() && this.entry!.getTime() > (DateVerifier.fixDate(then)?.getTime()??Number.MAX_VALUE), `${this.entry} is greater then ${then}.`, !this.entry);
+    this.manage(this.checkDefined() && this.entry!.getTime() < (DateVerifier.fixDate(then)?.getTime()??Number.MAX_VALUE), `${this.entry} is greater then ${then}.`);
 
   /**
    * Makes sure that the Date is after than the defined one
@@ -41,21 +41,18 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   after = (then: Date | string): DateVerifier =>
-    this.manage(this.checkDefined() && this.entry!.getTime() < (DateVerifier.fixDate(then)?.getTime()??Number.MIN_VALUE), `${this.entry} is greater or equal ${then}.`, !this.entry);
+    this.manage(this.checkDefined() && this.entry!.getTime() > (DateVerifier.fixDate(then)?.getTime()??Number.MIN_VALUE), `${this.entry} is greater or equal ${then}.`, !this.entry);
 
   /**
-   * Makes sure that the number is the defined range
+   * Makes sure that the Date is the defined range
    * @param min The bottom border of the range(exclusively)
    * @param max The top border of the range(exclusively)
-   * @throws {@link ShouldError} if the number is out of the range.
-   * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
+   * @throws {@link ShouldError} if the Date is out of the range.
+   * @throws {@link ShouldError} if the Date is not defined regardless the presence/absence of not() function.
    */
-  inRange = (min: Date | string, max: Date | string): DateVerifier =>
-    this.manage(
-      !!this.entry && this.entry > min && this.entry < max,
-      `${this.entry} isn't in range [${min},${max}].`,
-      !this.entry,
-    );
+  inRange = (min: Date | string, max: Date | string): DateVerifier =>{
+    return this.before(max) || this.after(min);
+  }
 
   private static fixDate(entry: Date | string | null | undefined) : Date | null {
     if (entry == null) return null;

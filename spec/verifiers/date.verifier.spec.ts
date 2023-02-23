@@ -131,13 +131,22 @@ describe('DateVerifier', () => {
           expect(() => new DateVerifier(entry).not.equals(expected, 'day')).toThrow(ShouldError);
         })
 
-        it('success day deviation', () => {
+        it('success month deviation', () => {
           const entry = Forger.create<Date>()!;
           const expected = new Date(entry);
           entry.setDate(1);
           expected.setDate(Forger.create<number>({numberMin: 2, numberMax: 28})!);
           //
           expect(() => new DateVerifier(entry).not.equals(expected, 'month')).toThrow(ShouldError);
+        })
+
+        it('success year deviation', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = new Date(entry);
+          entry.setMonth(0);
+          expected.setMonth(Forger.create<number>({numberMin: 1, numberMax: 11})!);
+          //
+          expect(() => new DateVerifier(entry).not.equals(expected, 'year')).toThrow(ShouldError);
         })
 
         it('not equal throws', () => {
@@ -287,13 +296,22 @@ describe('DateVerifier', () => {
           expect(() => new DateVerifier(entry.toString()).not.equals(expected.toString(), 'day')).toThrow(ShouldError);
         })
 
-        it('success day deviation', () => {
+        it('success month deviation', () => {
           const entry = Forger.create<Date>()!;
           const expected = new Date(entry);
           entry.setDate(1);
           expected.setDate(Forger.create<number>({numberMin: 2, numberMax: 28})!);
           //
           expect(() => new DateVerifier(entry.toString()).not.equals(expected.toString(), 'month')).toThrow(ShouldError);
+        })
+
+        it('success year deviation', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = new Date(entry);
+          entry.setMonth(0);
+          expected.setMonth(Forger.create<number>({numberMin: 1, numberMax: 11})!);
+          //
+          expect(() => new DateVerifier(entry.toString()).not.equals(expected.toString(), 'year')).toThrow(ShouldError);
         })
 
         it('not equal throws', () => {
@@ -313,6 +331,338 @@ describe('DateVerifier', () => {
           const expected = Forger.create<Date>()!;
           //
           expect(() => new DateVerifier(null).not.equals(expected)).toThrow(ShouldError);
+        })
+      })
+    })
+  })
+
+  describe('before', () => {
+    describe('Date', () => {
+      describe('direct', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMin: entry})!;
+          //
+          expect(() => new DateVerifier(entry).before(expected)).not.toThrow();
+        })
+
+        it('not before throws', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMax: entry})!;
+          //
+          expect(() => new DateVerifier(entry).before(expected)).toThrow(ShouldError);
+        })
+
+        it('undefined throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(undefined).before(expected)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(null).before(expected)).toThrow(ShouldError);
+        })
+      })
+      describe('not', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMin: entry})!;
+          //
+          expect(() => new DateVerifier(entry).not.before(expected)).toThrow(ShouldError);
+        })
+
+        it('not equal throws', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMax: entry})!;
+          //
+          expect(() => new DateVerifier(entry).not.before(expected)).not.toThrow();
+        })
+
+        it('undefined throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(undefined).not.before(expected)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(null).not.before(expected)).toThrow(ShouldError);
+        })
+      })
+    })
+
+    describe('string', () => {
+      describe('direct', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMin: entry})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).before(expected.toString())).not.toThrow();
+        })
+
+        it('not equal throws', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMax: entry})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).before(expected.toString())).toThrow(ShouldError);
+        })
+
+        it('undefined throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(undefined).before(expected)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(null).before(expected)).toThrow(ShouldError);
+        })
+      })
+      describe('not', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMin: entry})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).not.before(expected.toString())).toThrow(ShouldError);
+        })
+
+        it('not equal throws', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMax: entry})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).not.before(expected.toString())).not.toThrow();
+        })
+
+        it('undefined throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(undefined).not.before(expected)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(null).not.before(expected)).toThrow(ShouldError);
+        })
+      })
+    })
+  })
+
+  describe('after', () => {
+    describe('Date', () => {
+      describe('direct', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMax: entry})!;
+          //
+          expect(() => new DateVerifier(entry).after(expected)).not.toThrow();
+        })
+
+        it('not after throws', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMin: entry})!;
+          //
+          expect(() => new DateVerifier(entry).after(expected)).toThrow(ShouldError);
+        })
+
+        it('undefined throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(undefined).after(expected)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(null).after(expected)).toThrow(ShouldError);
+        })
+      })
+      describe('not', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMax: entry})!;
+          //
+          expect(() => new DateVerifier(entry).not.after(expected)).toThrow(ShouldError);
+        })
+
+        it('not equal throws', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMin: entry})!;
+          //
+          expect(() => new DateVerifier(entry).not.after(expected)).not.toThrow();
+        })
+
+        it('undefined throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(undefined).not.after(expected)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(null).not.after(expected)).toThrow(ShouldError);
+        })
+      })
+    })
+
+    describe('string', () => {
+      describe('direct', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMax: entry})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).after(expected.toString())).not.toThrow();
+        })
+
+        it('not equal throws', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMin: entry})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).after(expected.toString())).toThrow(ShouldError);
+        })
+
+        it('undefined throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(undefined).after(expected)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(null).after(expected)).toThrow(ShouldError);
+        })
+      })
+      describe('not', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMax: entry})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).not.after(expected.toString())).toThrow(ShouldError);
+        })
+
+        it('not equal throws', () => {
+          const entry = Forger.create<Date>()!;
+          const expected = Forger.create<Date>({dateMin: entry})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).not.after(expected.toString())).not.toThrow();
+        })
+
+        it('undefined throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(undefined).not.after(expected)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          const expected = Forger.create<Date>()!;
+          //
+          expect(() => new DateVerifier(null).not.after(expected)).toThrow(ShouldError);
+        })
+      })
+    })
+  })
+
+  describe('inRange', () => {
+    let dateMin: Date;
+    let dateMax: Date;
+
+    beforeEach(() => {
+      dateMin = Forger.create<Date>({dateMax: new Date(1900,0,1)})!;
+      dateMax = Forger.create<Date>({dateMin: new Date(2000,0,1)})!;
+    })
+
+    describe('Date', () => {
+      describe('direct', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>({dateMax, dateMin})!;
+          //
+          expect(() => new DateVerifier(entry).inRange(dateMin, dateMax)).not.toThrow();
+        })
+
+        it('not inRange throws', () => {
+          const entry = Forger.create<Date>({dateMin: dateMax})!;
+          //
+          expect(() => new DateVerifier(entry).inRange(dateMin, dateMax)).toThrow(ShouldError);
+        })
+
+        it('undefined throws', () => {
+          expect(() => new DateVerifier(undefined).inRange(dateMin, dateMax)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          expect(() => new DateVerifier(null).inRange(dateMin, dateMax)).toThrow(ShouldError);
+        })
+      })
+      describe('not', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>({dateMax, dateMin})!;
+          //
+          expect(() => new DateVerifier(entry).not.inRange(dateMin, dateMax)).toThrow(ShouldError);
+        })
+
+        it('not equal throws', () => {
+          const entry = Forger.create<Date>({dateMin: dateMax})!;
+          //
+          expect(() => new DateVerifier(entry).not.inRange(dateMin, dateMax)).not.toThrow();
+        })
+
+        it('undefined throws', () => {
+          expect(() => new DateVerifier(undefined).not.inRange(dateMin, dateMax)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          expect(() => new DateVerifier(null).not.inRange(dateMin, dateMax)).toThrow(ShouldError);
+        })
+      })
+    })
+
+    describe('string', () => {
+      describe('direct', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>({dateMax, dateMin})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).inRange(dateMin.toString(), dateMax.toString())).not.toThrow();
+        })
+
+        it('not equal throws', () => {
+          const entry = Forger.create<Date>({dateMin: dateMax})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).inRange(dateMin.toString(), dateMax.toString())).toThrow(ShouldError);
+        })
+
+        it('undefined throws', () => {
+          expect(() => new DateVerifier(undefined).inRange(dateMin, dateMax)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          expect(() => new DateVerifier(null).inRange(dateMin, dateMax)).toThrow(ShouldError);
+        })
+      })
+      describe('not', () => {
+        it('success', () => {
+          const entry = Forger.create<Date>({dateMax, dateMin})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).not.inRange(dateMin.toString(), dateMax.toString())).toThrow(ShouldError);
+        })
+
+        it('not equal throws', () => {
+          const entry = Forger.create<Date>({dateMin: dateMax})!;
+          //
+          expect(() => new DateVerifier(entry.toString()).not.inRange(dateMin.toString(), dateMax.toString())).not.toThrow();
+        })
+
+        it('undefined throws', () => {
+          expect(() => new DateVerifier(undefined).not.inRange(dateMin, dateMax)).toThrow(ShouldError);
+        })
+
+        it('null throws', () => {
+          expect(() => new DateVerifier(null).not.inRange(dateMin, dateMax)).toThrow(ShouldError);
         })
       })
     })
