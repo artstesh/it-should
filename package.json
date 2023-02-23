@@ -1,6 +1,6 @@
 {
   "name": "@artstesh/it-should",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "It should work!.. Shouldn't? ;)",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

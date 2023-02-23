@@ -3,7 +3,7 @@ import { StringVerifier } from './string.verifier';
 import { ObjectsVerifier } from './objects.verifier';
 import { ArrayVerifier } from './array.verifier';
 import { GeneralVerifier } from './general.verifier';
-import { DateVerifier } from "./date.verifier";
+import { DateVerifier } from './date.verifier';
 
 /**
  * The factory that provides a concrete inspector

@@ -20,10 +20,12 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
   equals = (expected: Date | string, accuracy?: DateAccuracy): DateVerifier => {
     this.checkDefined();
     const expectation = DateVerifier.fixDate(expected);
-    if (!expectation)  return this.manage(false, `${this.entry} doesn't equal ${expected}.`);
-    const result = DateVerifier.roundDate(this.entry!,accuracy).getTime() === DateVerifier.roundDate(expectation,accuracy).getTime();
+    if (!expectation) return this.manage(false, `${this.entry} doesn't equal ${expected}.`);
+    const result =
+      DateVerifier.roundDate(this.entry!, accuracy).getTime() ===
+      DateVerifier.roundDate(expectation, accuracy).getTime();
     return this.manage(result, `${this.entry} doesn't equal ${expected}.`);
-  }
+  };
 
   /**
    * Makes sure that the Date is before than the defined one
@@ -32,7 +34,10 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   before = (then: Date | string): DateVerifier =>
-    this.manage(this.checkDefined() && this.entry!.getTime() < (DateVerifier.fixDate(then)?.getTime()??Number.MAX_VALUE), `${this.entry} is greater then ${then}.`);
+    this.manage(
+      this.checkDefined() && this.entry!.getTime() < (DateVerifier.fixDate(then)?.getTime() ?? Number.MAX_VALUE),
+      `${this.entry} is greater then ${then}.`,
+    );
 
   /**
    * Makes sure that the Date is after than the defined one
@@ -41,7 +46,11 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   after = (then: Date | string): DateVerifier =>
-    this.manage(this.checkDefined() && this.entry!.getTime() > (DateVerifier.fixDate(then)?.getTime()??Number.MIN_VALUE), `${this.entry} is greater or equal ${then}.`, !this.entry);
+    this.manage(
+      this.checkDefined() && this.entry!.getTime() > (DateVerifier.fixDate(then)?.getTime() ?? Number.MIN_VALUE),
+      `${this.entry} is greater or equal ${then}.`,
+      !this.entry,
+    );
 
   /**
    * Makes sure that the Date is the defined range
@@ -50,25 +59,43 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
    * @throws {@link ShouldError} if the Date is out of the range.
    * @throws {@link ShouldError} if the Date is not defined regardless the presence/absence of not() function.
    */
-  inRange = (min: Date | string, max: Date | string): DateVerifier =>{
+  inRange = (min: Date | string, max: Date | string): DateVerifier => {
     return this.before(max) || this.after(min);
-  }
+  };
 
-  private static fixDate(entry: Date | string | null | undefined) : Date | null {
+  private static fixDate(entry: Date | string | null | undefined): Date | null {
     if (entry == null) return null;
     if (entry instanceof Date) return entry;
     return new Date(entry);
   }
 
-  private static roundDate(date: Date , accuracy?: DateAccuracy) : Date {
-    switch (accuracy){
-      case 'second': return new Date(new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()).getTime());
-      case 'minute': return new Date(new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime());
-      case 'hour': return new Date(new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours()).getTime());
-      case 'day': return new Date(new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime());
-      case 'month': return new Date(new Date(date.getFullYear(), date.getMonth()).getTime());
-      case 'year': return new Date(new Date(date.getFullYear()).getTime());
-      default: return new Date(date.getTime());
+  private static roundDate(date: Date, accuracy?: DateAccuracy): Date {
+    switch (accuracy) {
+      case 'second':
+        return new Date(
+          new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            date.getHours(),
+            date.getMinutes(),
+            date.getSeconds(),
+          ).getTime(),
+        );
+      case 'minute':
+        return new Date(
+          new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()).getTime(),
+        );
+      case 'hour':
+        return new Date(new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours()).getTime());
+      case 'day':
+        return new Date(new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime());
+      case 'month':
+        return new Date(new Date(date.getFullYear(), date.getMonth()).getTime());
+      case 'year':
+        return new Date(new Date(date.getFullYear()).getTime());
+      default:
+        return new Date(date.getTime());
     }
   }
 }
