@@ -1,16 +1,17 @@
-import { AbstractVerifier } from './abstract.verifier';
-import { ObjectManager } from './managers/object.manager';
+import { ObjectManager } from "./managers/object.manager";
+import { ObjectsError } from "../errors/objects.error";
+import { GeneralVerifier } from "./general.verifier";
 
 /**
  * An inspector responsible for comparison of objects
  */
-export class ObjectsVerifier<T, P> extends AbstractVerifier {
+export class ObjectsVerifier<T, P> extends GeneralVerifier<T | null | undefined> {
   private _rules: { [prop: string]: (o1: any, o2: any) => boolean } = {};
   private readonly entryManager: ObjectManager<T>;
   private readonly otherManager: ObjectManager<P>;
 
-  constructor(private entry: T, private other: P) {
-    super();
+  constructor(protected entry: T, private other: P, protected errorManager: ObjectsError) {
+    super(entry);
     this.entryManager = new ObjectManager(entry);
     this.otherManager = new ObjectManager(other);
   }
@@ -21,7 +22,7 @@ export class ObjectsVerifier<T, P> extends AbstractVerifier {
    * @throws {@link ShouldError} if objects are different accordingly to the defined rules.
    */
   equal(): ObjectsVerifier<T, P> {
-    return this.manage(this.compareKeys(this.entryManager, this.otherManager), `Objects don't equal.`);
+    return this.manage(this.compareKeys(this.entryManager, this.otherManager), (d) => this.errorManager.equal(d));
   }
 
   /**
@@ -67,18 +68,18 @@ export class ObjectsVerifier<T, P> extends AbstractVerifier {
 
   private compareKeys<Z, R>(obj1: ObjectManager<Z>, obj2: ObjectManager<R>): boolean {
     const props = obj1.getProperties();
-    this.manage(props.size === obj2.countProperties(), 'The objects has diffent number of properties.');
+    this.manage(props.size === obj2.countProperties(), () => this.errorManager.countProperties());
     props.forEach((p) => {
       const val1 = obj1.getValue(p + '');
       const val2 = obj2.getValue(p + '');
-      if (!!this._rules[p + '']) this.manage(this._rules[p + ''](val1, val2), `Objects failed custom rule for '${p}'.`);
+      if (!!this._rules[p + ''])
+        this.manage(this._rules[p + ''](val1, val2), () => this.errorManager.customRule(p + ''));
       else if (val1 instanceof Date)
-        this.manage(
-          val1?.toString() === val2?.toString(),
-          `Objects have different '${p}': ${val1?.toString()} & ${val2?.toString()}.`,
+        this.manage(val1?.toString() === val2?.toString(), () =>
+          this.errorManager.differentVals(p + '', val1, val2),
         );
       else if (typeof val1 === 'object') this.compareKeys(new ObjectManager(val1), new ObjectManager(val2));
-      else this.manage(val1 === val2, `Objects have different '${p}': ${val1} & ${val2}.`);
+      else this.manage(val1 === val2, () => this.errorManager.differentVals(p + '', val1, val2));
     });
     return true;
   }

@@ -1,11 +1,12 @@
-import { SingleParamFunc } from './utils/verify.func';
-import { GeneralVerifier } from './general.verifier';
+import { SingleParamFunc } from "./utils/verify.func";
+import { GeneralVerifier } from "./general.verifier";
+import { StringError } from "../errors/string.error";
 
 /**
  * An inspector responsible for a string verifications
  */
 export class StringVerifier extends GeneralVerifier<string | null | undefined> {
-  constructor(entry: string | null | undefined) {
+  constructor(entry: string | null | undefined, protected errorManager: StringError) {
     super(entry);
   }
 
@@ -22,9 +23,8 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
    * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
    */
   whitespace = (): StringVerifier =>
-    this.manage(
-      this.checkDefined() && this.entry?.replaceAll(' ', '')?.length === 0,
-      `'${this.entry} 'is not whitespace.`,
+    this.manage(this.checkDefined() && this.entry?.replaceAll(' ', '')?.length === 0, (d) =>
+      this.errorManager.whitespace(this.entry, d),
     );
 
   /**
@@ -35,7 +35,7 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
   upperCased = (): StringVerifier =>
     this.manage(
       this.checkDefined() && this.entry === this.entry?.toUpperCase(),
-      `'${this.entry}' is not uppercased.`,
+      (d) => this.errorManager.upperCased(this.entry, d),
       !this.entry?.replaceAll(' ', ''),
     );
 
@@ -47,7 +47,7 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
   lowerCased = (): StringVerifier =>
     this.manage(
       this.checkDefined() && this.entry === this.entry?.toLowerCase(),
-      `'${this.entry} 'is not lowercased.`,
+      (d) => this.errorManager.lowerCased(this.entry, d),
       !this.entry?.replaceAll(' ', ''),
     );
 
@@ -58,9 +58,8 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
    * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
    */
   hasLength = (expected: number): StringVerifier =>
-    this.manage(
-      this.checkDefined() && this.entry?.length === expected,
-      `'${this.entry}' doesn't equal expected length ${expected}.`,
+    this.manage(this.checkDefined() && this.entry?.length === expected, (d) =>
+      this.errorManager.hasLength(expected, this.entry?.length, d),
     );
 
   /**
@@ -70,7 +69,9 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
    * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
    */
   equals = (expected: string | null | undefined): StringVerifier =>
-    this.manage(this.checkDefined() && this.entry === expected, `'${this.entry}' doesn't equal ${expected}.`);
+    this.manage(this.checkDefined() && this.entry === expected, (d) =>
+      this.errorManager.equals(expected, this.entry, d),
+    );
 
   /**
    * Makes sure that the examined string has the same content as the expected one, ignoring case.
@@ -79,7 +80,9 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
    * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
    */
   equalsIgnoreCase = (expected: string | null | undefined): StringVerifier =>
-    this.manage(this.entry?.toUpperCase() === expected?.toUpperCase(), `'${this.entry}' doesn't equal ${expected}.`);
+    this.manage(this.entry?.toUpperCase() === expected?.toUpperCase(), (d) =>
+      this.errorManager.equalsIgnoreCase(expected, this.entry, d),
+    );
 
   /**
    * Makes sure that the examined string contains the expected one, case-sensitive.
@@ -90,7 +93,7 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
    */
   contains(expected: string, counter?: SingleParamFunc<number>): void {
     const count = (this.entry?.split(expected)?.length ?? 0) - 1;
-    const error = `'${this.entry}' doesn't contain '${expected}' expected number of times.`;
+    const error = (d: boolean) => this.errorManager.contains(expected, this.entry, d);
     this.manage(!!counter ? counter(count) : count > 0, error);
   }
 
@@ -103,7 +106,7 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
    */
   containsIgnoreCase(expected: string, counter?: SingleParamFunc<number>): void {
     const count = (this.entry?.toUpperCase()?.split(expected?.toUpperCase())?.length ?? 0) - 1;
-    const error = `'${this.entry}' doesn't contain '${expected}' expected number of times.`;
+    const error = (d: boolean) => this.errorManager.containsIgnoreCase(expected, this.entry, d);
     this.manage(!!counter ? counter(count) : count > 0, error);
   }
 
@@ -116,7 +119,7 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
   containsAny(...expected: string[]): void {
     let found = 0;
     if (!!this.entry) found = expected.map((e) => this.entry?.indexOf(e) !== -1).filter((e) => e)?.length ?? 0;
-    this.manage(found > 0, `'${this.entry}' doesn't contain any of [${expected.join(',')}].`);
+    this.manage(found > 0, (d) => this.errorManager.containsAny(this.entry, d));
   }
 
   /**
@@ -130,6 +133,6 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
     if (!!this.entry)
       found =
         expected.map((e) => this.entry?.toUpperCase().indexOf(e.toUpperCase()) !== -1).filter((e) => e)?.length ?? 0;
-    this.manage(found > 0, `'${this.entry}' doesn't contain any of [${expected.join(',')}].`);
+    this.manage(found > 0, (d) => this.errorManager.containsAnyIgnoreCase(this.entry, d));
   }
 }

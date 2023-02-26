@@ -1,15 +1,30 @@
 import { Forger } from "@artstesh/forger";
 import { ShouldError } from "../../src/models/should.error";
-import { ObjectsVerifier } from "../../src/verifiers/objects.verifier";
+import { ObjectsVerifier } from "../../src";
+import { instance, mock, reset } from "ts-mockito";
+import { ObjectsError } from "../../src/errors/objects.error";
+
+interface ITest {
+  id: number;
+  name: string;
+  creation: Date;
+  isActive: boolean;
+  func: () => void;
+}
 
 describe('ObjectsVerifier', () => {
-  interface ITest {
-    id: number;
-    name: string;
-    creation: Date;
-    isActive: boolean;
-    func: () => void;
-  }
+  const errorManager = mock(ObjectsError);
+  let expectedError: ShouldError;
+  let errorMessage: string;
+
+  beforeEach(() => {
+    errorMessage = Forger.create<string>()!;
+    expectedError = new ShouldError(errorMessage);
+  })
+
+  afterEach(() => {
+    reset(errorManager);
+  })
 
   describe('rule', () => {
     describe('direct', () => {
@@ -21,7 +36,7 @@ describe('ObjectsVerifier', () => {
         exp.name = entry.name;
         exp.isActive = entry.isActive;
         //
-        expect(() => new ObjectsVerifier(entry,exp)
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager))
           .rule('creation',(o1,o2)=> o1 != o2)
           .equal()).not.toThrow();
       })
@@ -35,7 +50,7 @@ describe('ObjectsVerifier', () => {
         exp.name = entry.name;
         exp.isActive = entry.isActive;
         //
-        expect(() => new ObjectsVerifier(entry,exp)
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager))
           .rule('creation',(o1,o2)=> o1 != o2)
           .not.equal()).toThrow(ShouldError);
       })
@@ -54,7 +69,7 @@ describe('ObjectsVerifier', () => {
         exp.id = entry.id;
         exp.fullName = entry.name;
         //
-        expect(() => new ObjectsVerifier(entry,exp)
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager))
           .map('name', 'fullName').equal()).not.toThrow();
       })
 
@@ -63,7 +78,7 @@ describe('ObjectsVerifier', () => {
         const exp = Forger.create<IMapOtherTest>()!;
         exp.id = entry.id;
         //
-        expect(() => new ObjectsVerifier(entry,exp)
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager))
           .map('name', 'fullName').equal()).toThrow(ShouldError);
       })
     });
@@ -75,7 +90,7 @@ describe('ObjectsVerifier', () => {
         exp.id = entry.id;
         exp.fullName = entry.name;
         //
-        expect(() => new ObjectsVerifier(entry,exp)
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager))
           .map('name', 'fullName').not.equal()).toThrow(ShouldError);
       })
 
@@ -85,7 +100,7 @@ describe('ObjectsVerifier', () => {
         exp.id = entry.id;
         exp.fullName = entry.name;
         //
-        expect(() => new ObjectsVerifier(entry,exp)
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager))
           .map('name', 'fullName').not.equal()).toThrow(ShouldError);
       })
     })
@@ -103,7 +118,7 @@ describe('ObjectsVerifier', () => {
         const exp = Forger.create<IIgnoring2Test>()!;
         exp.name = entry.name;
         //
-        expect(() => new ObjectsVerifier(entry,exp).ignoring('id')
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).ignoring('id')
           .equal()).not.toThrow();
       })
 
@@ -112,7 +127,7 @@ describe('ObjectsVerifier', () => {
         const exp = Forger.create<IIgnoring3Test>()!;
         exp.id = entry.id;
         //
-        expect(() => new ObjectsVerifier(entry,exp).ignoring('fullName', 'name')
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).ignoring('fullName', 'name')
           .equal()).not.toThrow();
       })
     });
@@ -124,7 +139,7 @@ describe('ObjectsVerifier', () => {
         const exp = Forger.create<IIgnoring2Test>()!;
         exp.name = entry.name;
         //
-        expect(() => new ObjectsVerifier(entry,exp).ignoring('id')
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).ignoring('id')
           .equal()).not.toThrow(ShouldError);
       })
 
@@ -133,7 +148,7 @@ describe('ObjectsVerifier', () => {
         const exp = Forger.create<IIgnoring3Test>()!;
         exp.id = entry.id;
         //
-        expect(() => new ObjectsVerifier(entry,exp).not.ignoring('fullName', 'name')
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).not.ignoring('fullName', 'name')
           .equal()).toThrow(ShouldError);
       })
     })
@@ -145,14 +160,14 @@ describe('ObjectsVerifier', () => {
         let entry: ITest;
         const exp:ITest = Forger.create<ITest>()!;
         //
-        expect(() => new ObjectsVerifier(entry,exp).equal()).toThrow(ShouldError);
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).equal()).toThrow(ShouldError);
       })
 
       it('other not defined throws', () => {
         const entry = Forger.create<ITest>()!;
         let exp: ITest;
         //
-        expect(() => new ObjectsVerifier(entry,exp).equal()).toThrow(ShouldError);
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).equal()).toThrow(ShouldError);
       })
 
       it('equal success', () => {
@@ -163,7 +178,7 @@ describe('ObjectsVerifier', () => {
         exp.isActive = entry.isActive;
         exp.creation = new Date(entry.creation);
         //
-        expect(() => new ObjectsVerifier(entry,exp).equal()).not.toThrow();
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).equal()).not.toThrow();
       })
 
       it('ignoring success', () => {
@@ -173,7 +188,7 @@ describe('ObjectsVerifier', () => {
         exp.name = entry.name;
         exp.isActive = entry.isActive;
         //
-        expect(() => new ObjectsVerifier(entry,exp).ignoring('creation').equal()).not.toThrow();
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).ignoring('creation').equal()).not.toThrow();
       })
 
       it('compareOnly success', () => {
@@ -181,7 +196,7 @@ describe('ObjectsVerifier', () => {
         const exp = Forger.create<ITest>()!;
         exp.id = entry.id;
         //
-        expect(() => new ObjectsVerifier(entry,exp).compareOnly('id').equal()).not.toThrow();
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).compareOnly('id').equal()).not.toThrow();
       })
     })
     describe('with not', () => {
@@ -189,14 +204,14 @@ describe('ObjectsVerifier', () => {
         let entry: ITest;
         const exp:ITest = Forger.create<ITest>()!;
         //
-        expect(() => new ObjectsVerifier(entry,exp).not.equal()).toThrow(ShouldError);
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).not.equal()).toThrow(ShouldError);
       })
 
       it('other not defined throws', () => {
         const entry = Forger.create<ITest>()!;
         let exp: ITest;
         //
-        expect(() => new ObjectsVerifier(entry,exp).not.equal()).toThrow(ShouldError);
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).not.equal()).toThrow(ShouldError);
       })
 
       it('equal throws', () => {
@@ -207,7 +222,7 @@ describe('ObjectsVerifier', () => {
         exp.isActive = entry.isActive;
         exp.creation = new Date(entry.creation);
         //
-        expect(() => new ObjectsVerifier(entry,exp).not.equal()).toThrow(ShouldError);
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).not.equal()).toThrow(ShouldError);
       })
 
       it('ignoring throws', () => {
@@ -217,7 +232,7 @@ describe('ObjectsVerifier', () => {
         exp.name = entry.name;
         exp.isActive = entry.isActive;
         //
-        expect(() => new ObjectsVerifier(entry,exp).ignoring('creation').not.equal()).toThrow(ShouldError);
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).ignoring('creation').not.equal()).toThrow(ShouldError);
       })
 
       it('compareOnly throws', () => {
@@ -225,7 +240,7 @@ describe('ObjectsVerifier', () => {
         const exp = Forger.create<ITest>()!;
         exp.id = entry.id;
         //
-        expect(() => new ObjectsVerifier(entry,exp).compareOnly('id').not.equal()).toThrow(ShouldError);
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).compareOnly('id').not.equal()).toThrow(ShouldError);
       })
     })
   })

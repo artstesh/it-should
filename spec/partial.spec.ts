@@ -1,11 +1,12 @@
 import { Forger } from "@artstesh/forger";
-import { ArrayVerifier } from "../src";
-import { ShouldError } from "../src/models/should.error";
+import { StringVerifier, VerifierFactory } from "../src";
 
 describe("isolated", () => {
-  it("success asc", () => {
-    let entry: string[] = Forger.create<string[]>({arrayLength: 10})!;
+
+
+  it('creates string verifier', () => {
+    const result = VerifierFactory.getInstance().string(Forger.create<string>());
     //
-    expect(() => new ArrayVerifier(entry).ordered({dir: 'desc'})).toThrow(ShouldError);
-  });
+    expect(typeof result == typeof StringVerifier)
+  })
 });

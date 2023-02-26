@@ -1,10 +1,13 @@
-import { AbstractVerifier } from './abstract.verifier';
+import { AbstractVerifier } from "./abstract.verifier";
+import { CommonError } from "../errors/common.error";
 
 /**
  * An inspector responsible for comparison of objects
  */
-export class GeneralVerifier<T> extends AbstractVerifier {
-  constructor(protected entry: T) {
+export abstract class GeneralVerifier<T> extends AbstractVerifier {
+  protected abstract errorManager: CommonError;
+
+  protected constructor(protected entry: T) {
     super();
   }
 
@@ -17,8 +20,8 @@ export class GeneralVerifier<T> extends AbstractVerifier {
     type: 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'object' | 'function' | DateConstructor,
   ): this {
     this.checkDefined();
-    if (type === Date) this.manage(this.entry instanceof Date, `${this.entry} is not of type ${type}`);
-    else this.manage(typeof this.entry === type, `${this.entry} is not of type ${type}`);
+    if (type === Date) this.manage(this.entry instanceof Date, (d) => this.errorManager.beTypeOf('Date', d));
+    else this.manage(typeof this.entry === type, (d) => this.errorManager.beTypeOf(type + '', d));
     return this;
   }
 
@@ -26,11 +29,10 @@ export class GeneralVerifier<T> extends AbstractVerifier {
    * Makes sure that the examined string doesn't equal null or undefined
    * @throws {@link ShouldError} if the string is not defined.
    */
-  defined = (): this =>
-    this.manage(this.entry != null, `'${this.entry}' is ${this.notIsActivated ? '' : 'not '}defined.`);
+  defined = (): this => this.manage(this.entry != null, (d) => this.errorManager.defined(d));
 
   protected checkDefined(): boolean {
-    this.manage(this.entry != null, `The entry is ${this.notIsActivated ? '' : 'not '}defined`, true);
+    this.manage(this.entry != null, (d) => this.errorManager.defined(d), true);
     return true;
   }
 }

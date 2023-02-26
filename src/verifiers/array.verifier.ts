@@ -1,12 +1,13 @@
-import { OrderingComparer } from './utils/ordering.comparer';
-import { ArrayOrderedSettings } from '../models/array-ordered.settings';
-import { GeneralVerifier } from './general.verifier';
+import { OrderingComparer } from "./utils/ordering.comparer";
+import { ArrayOrderedSettings } from "../models/array-ordered.settings";
+import { GeneralVerifier } from "./general.verifier";
+import { ArrayError } from "../errors/array.error";
 
 /**
  * An inspector responsible for an array verifications
  */
 export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] | null | undefined> {
-  constructor(entry: (T | null | undefined)[] | null | undefined) {
+  constructor(entry: (T | null | undefined)[] | null | undefined, protected errorManager: ArrayError) {
     super(entry);
   }
 
@@ -15,7 +16,8 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
    * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
    * @throws {@link ShouldError} if the array is not empty
    */
-  empty = (): ArrayVerifier<T> => this.manage(this.checkDefined() && !this.entry?.length, `The collection is empty.`);
+  empty = (): ArrayVerifier<T> =>
+    this.manage(this.checkDefined() && !this.entry?.length, (d) => this.errorManager.empty(d));
 
   /**
    * Makes sure that the examined array has the expected number of items
@@ -24,7 +26,9 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
    * @throws {@link ShouldError} if the array's length is not as the expected one.
    */
   length = (expected: number): ArrayVerifier<T> =>
-    this.manage(this.checkDefined() && this.entry?.length === expected, `The collection's length is not ${expected}.`);
+    this.manage(this.checkDefined() && this.entry?.length === expected, (d) =>
+      this.errorManager.length(expected, this.entry?.length, d),
+    );
 
   /**
    * Makes sure that the examined array is ordered properly
@@ -44,7 +48,7 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
         settings?.dir,
       );
     });
-    this.manage(result, `Elements aren't ordered.`);
+    this.manage(result, (d) => this.errorManager.ordered(d));
     return this;
   }
 
@@ -61,7 +65,7 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
     let result: number;
     if (!!identifier) result = this.entry?.filter((e) => identifier(e) === identifier(expected))?.length ?? 0;
     else result = this.entry?.filter((e) => e === expected)?.length ?? 0;
-    this.manage(result > 0, `The collection doesn't contain the expected element.`);
+    this.manage(result > 0, (d) => this.errorManager.contain(d));
     return this;
   }
 
@@ -79,7 +83,7 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
     let result: number;
     if (!!identifier) result = this.entry?.filter((e) => identifier(e) === identifier(expected))?.length ?? 0;
     else result = this.entry?.filter((e) => e === expected)?.length ?? 0;
-    this.manage(result === times, `The collection has ${result} elements instead of one.`);
+    this.manage(result === times, (d) => this.errorManager.containExactly(times, result, d));
     return this;
   }
 
@@ -91,10 +95,7 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
    */
   containOnly(condition: (e?: T | null) => boolean): ArrayVerifier<T> {
     this.checkDefined();
-    this.manage(
-      !this.entry?.filter((e) => !condition(e))?.length,
-      `The collection doesn't contain the expected element.`,
-    );
+    this.manage(!this.entry?.filter((e) => !condition(e))?.length, (d) => this.errorManager.containOnly(d));
     return this;
   }
 
@@ -106,10 +107,7 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
    */
   containBy(condition: (e?: T | null) => boolean): ArrayVerifier<T> {
     this.checkDefined();
-    this.manage(
-      !!this.entry?.filter((e) => condition(e))?.length,
-      `The collection doesn't contain the expected element.`,
-    );
+    this.manage(!!this.entry?.filter((e) => condition(e))?.length, (d) => this.errorManager.containBy(d));
     return this;
   }
 
@@ -123,19 +121,17 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
   containByExactly(times: number, condition: (e?: T | null) => boolean): ArrayVerifier<T> {
     this.checkDefined();
     const result = this.entry?.filter((e) => condition(e))?.length ?? 0;
-    this.manage(result === times, `The collection doesn't contain the expected element.`);
+    this.manage(result === times, (d) => this.errorManager.containByExactly(times, result, d));
     return this;
   }
 
-  // ContainInOrder
+  // OnlyHaveUniqueItems(x => x)
   // Equal
   // BeEquivalentTo([],x => x)
-  // OnlyHaveUniqueItems(x => x)
   // HaveSameCount([])
   // HaveCountGreaterThan
   // HaveCountLessThan
   // StartWith([],identifier: (e?: T | null) => any = x => x)
   // EndWith([],identifier: (e?: T | null) => any = x => x)
-  // array.onlyContain(condition: (e?: T | null) => boolean);
   // ?? HaveElementAt(2, 5)
 }

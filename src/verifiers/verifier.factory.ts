@@ -1,9 +1,13 @@
-import { NumberVerifier } from './number.verifier';
-import { StringVerifier } from './string.verifier';
-import { ObjectsVerifier } from './objects.verifier';
-import { ArrayVerifier } from './array.verifier';
-import { GeneralVerifier } from './general.verifier';
-import { DateVerifier } from './date.verifier';
+import { NumberVerifier } from "./number.verifier";
+import { StringVerifier } from "./string.verifier";
+import { ObjectsVerifier } from "./objects.verifier";
+import { ArrayVerifier } from "./array.verifier";
+import { DateVerifier } from "./date.verifier";
+import { ArrayError } from "../errors/array.error";
+import { NumberError } from "../errors/number.error";
+import { ObjectsError } from "../errors/objects.error";
+import { StringError } from "../errors/string.error";
+import { DateError } from "../errors/date.error";
 
 /**
  * The factory that provides a concrete inspector
@@ -21,16 +25,7 @@ export class VerifierFactory {
    * @returns {@link ArrayVerifier}
    */
   public array<T>(entry: (T | null | undefined)[] | null | undefined): ArrayVerifier<T> {
-    return new ArrayVerifier(entry);
-  }
-
-  /**
-   * Provides an inspector responsible for common verifications
-   * @param entry An element that should be examined
-   * @returns {@link GeneralVerifier}
-   */
-  public general<T>(entry: T): GeneralVerifier<T> {
-    return new GeneralVerifier(entry);
+    return new ArrayVerifier(entry, new ArrayError());
   }
 
   /**
@@ -39,7 +34,7 @@ export class VerifierFactory {
    * @returns {@link NumberVerifier}
    */
   public number(entry: number | null | undefined): NumberVerifier {
-    return new NumberVerifier(entry);
+    return new NumberVerifier(entry, new NumberError());
   }
 
   /**
@@ -49,7 +44,7 @@ export class VerifierFactory {
    * @returns {@link ObjectsVerifier}
    */
   public objects<T, P>(entry: T, other: P): ObjectsVerifier<T, P> {
-    return new ObjectsVerifier(entry, other);
+    return new ObjectsVerifier(entry, other, new ObjectsError());
   }
 
   /**
@@ -58,7 +53,7 @@ export class VerifierFactory {
    * @returns {@link StringVerifier}
    */
   public string(entry: string | null | undefined): StringVerifier {
-    return new StringVerifier(entry);
+    return new StringVerifier(entry, new StringError());
   }
 
   /**
@@ -67,6 +62,6 @@ export class VerifierFactory {
    * @returns {@link StringVerifier}
    */
   public date(entry: Date | string | null | undefined): DateVerifier {
-    return new DateVerifier(entry);
+    return new DateVerifier(entry, new DateError());
   }
 }

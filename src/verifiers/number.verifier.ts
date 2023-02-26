@@ -1,10 +1,11 @@
-import { GeneralVerifier } from './general.verifier';
+import { GeneralVerifier } from "./general.verifier";
+import { NumberError } from "../errors/number.error";
 
 /**
  * An inspector responsible for number verifications
  */
 export class NumberVerifier extends GeneralVerifier<number | null | undefined> {
-  constructor(entry: number | null | undefined) {
+  constructor(entry: number | null | undefined, protected errorManager: NumberError) {
     super(entry);
   }
 
@@ -14,7 +15,7 @@ export class NumberVerifier extends GeneralVerifier<number | null | undefined> {
    * @throws {@link ShouldError} if the number is not as the expected.
    */
   equals = (expected: number): NumberVerifier =>
-    this.manage(this.entry === expected, `${this.entry} doesn't equal ${expected}.`);
+    this.manage(this.entry === expected, (d) => this.errorManager.equals(expected, this.entry, d));
 
   /**
    * Makes sure that the number is greater than the defined one
@@ -23,7 +24,7 @@ export class NumberVerifier extends GeneralVerifier<number | null | undefined> {
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   greater = (then: number): NumberVerifier =>
-    this.manage(!!this.entry && this.entry > then, `${this.entry} is not greater then ${then}.`, !this.entry);
+    this.manage(!!this.entry && this.entry > then, (d) => this.errorManager.greater(then, this.entry, d), !this.entry);
 
   /**
    * Makes sure that the number is greater or as the defined one
@@ -32,7 +33,11 @@ export class NumberVerifier extends GeneralVerifier<number | null | undefined> {
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   greaterOrEqual = (then: number): NumberVerifier =>
-    this.manage(!!this.entry && this.entry >= then, `${this.entry} is not greater or equal ${then}.`, !this.entry);
+    this.manage(
+      !!this.entry && this.entry >= then,
+      (d) => this.errorManager.greaterOrEqual(then, this.entry, d),
+      !this.entry,
+    );
 
   /**
    * Makes sure that the number is less than the defined one
@@ -41,7 +46,7 @@ export class NumberVerifier extends GeneralVerifier<number | null | undefined> {
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   less = (then: number): NumberVerifier =>
-    this.manage(!!this.entry && this.entry < then, `${this.entry} is not greater or equal ${then}.`, !this.entry);
+    this.manage(!!this.entry && this.entry < then, (d) => this.errorManager.less(then, this.entry, d), !this.entry);
 
   /**
    * Makes sure that the number is less or as the defined one
@@ -50,21 +55,25 @@ export class NumberVerifier extends GeneralVerifier<number | null | undefined> {
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   lessOrEqual = (then: number): NumberVerifier =>
-    this.manage(!!this.entry && this.entry <= then, `${this.entry} is not greater or equal ${then}.`, !this.entry);
+    this.manage(
+      !!this.entry && this.entry <= then,
+      (d) => this.errorManager.lessOrEqual(then, this.entry, d),
+      !this.entry,
+    );
 
   /**
    * Makes sure that the number is greater than zero
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   positive = (): NumberVerifier =>
-    this.manage(!!this.entry && this.entry > 0, `${this.entry} is not positive.`, this.entry == null);
+    this.manage(!!this.entry && this.entry > 0, (d) => this.errorManager.positive(this.entry, d), this.entry == null);
 
   /**
    * Makes sure that the number is less than zero
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   negative = (): NumberVerifier =>
-    this.manage(!!this.entry && this.entry < 0, `${this.entry} is not negative.`, this.entry == null);
+    this.manage(!!this.entry && this.entry < 0, (d) => this.errorManager.negative(this.entry, d), this.entry == null);
 
   /**
    * Makes sure that the number is the defined range
@@ -76,7 +85,7 @@ export class NumberVerifier extends GeneralVerifier<number | null | undefined> {
   inRange = (min: number, max: number): NumberVerifier =>
     this.manage(
       !!this.entry && this.entry > min && this.entry < max,
-      `${this.entry} isn't in range [${min},${max}].`,
+      (d) => this.errorManager.inRange(min, max, this.entry, d),
       !this.entry,
     );
 
@@ -90,7 +99,7 @@ export class NumberVerifier extends GeneralVerifier<number | null | undefined> {
   approximately = (expected: number, precision: number): NumberVerifier =>
     this.manage(
       !!this.entry && Math.abs(this.entry - expected) < precision,
-      `${this.entry} doesn't equal ${expected}.`,
+      (d) => this.errorManager.approximately(expected, this.entry, d),
       !this.entry,
     );
 }

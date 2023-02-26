@@ -1,4 +1,5 @@
-import { GeneralVerifier } from './general.verifier';
+import { GeneralVerifier } from "./general.verifier";
+import { DateError } from "../errors/date.error";
 
 export type DateAccuracy = 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' | 'millisecond';
 
@@ -6,7 +7,7 @@ export type DateAccuracy = 'year' | 'month' | 'day' | 'hour' | 'minute' | 'secon
  * An inspector responsible for Date verifications
  */
 export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
-  constructor(entry: Date | string | null | undefined) {
+  constructor(entry: Date | string | null | undefined, protected errorManager: DateError) {
     super(DateVerifier.fixDate(entry));
   }
 
@@ -20,11 +21,11 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
   equals = (expected: Date | string, accuracy?: DateAccuracy): DateVerifier => {
     this.checkDefined();
     const expectation = DateVerifier.fixDate(expected);
-    if (!expectation) return this.manage(false, `${this.entry} doesn't equal ${expected}.`);
+    if (!expectation) return this.manage(false, (d) => this.errorManager.equals(expectation, this.entry, d));
     const result =
       DateVerifier.roundDate(this.entry!, accuracy).getTime() ===
       DateVerifier.roundDate(expectation, accuracy).getTime();
-    return this.manage(result, `${this.entry} doesn't equal ${expected}.`);
+    return this.manage(result, (d) => this.errorManager.equals(expectation, this.entry, d));
   };
 
   /**
@@ -33,11 +34,12 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
    * @throws {@link ShouldError} if the number is less than expected.
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
-  before = (then: Date | string): DateVerifier =>
-    this.manage(
-      this.checkDefined() && this.entry!.getTime() < (DateVerifier.fixDate(then)?.getTime() ?? Number.MAX_VALUE),
-      `${this.entry} is greater then ${then}.`,
+  before = (then: Date | string): DateVerifier => {
+    const fixedThen = DateVerifier.fixDate(then);
+    return this.manage(this.checkDefined() && this.entry!.getTime() < (fixedThen?.getTime() ?? Number.MAX_VALUE), (d) =>
+      this.errorManager.before(fixedThen, this.entry, d),
     );
+  };
 
   /**
    * Makes sure that the Date is after than the defined one
@@ -45,12 +47,14 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
    * @throws {@link ShouldError} if the number is greater than expected.
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
-  after = (then: Date | string): DateVerifier =>
-    this.manage(
-      this.checkDefined() && this.entry!.getTime() > (DateVerifier.fixDate(then)?.getTime() ?? Number.MIN_VALUE),
-      `${this.entry} is greater or equal ${then}.`,
+  after = (then: Date | string): DateVerifier => {
+    const fixedThen = DateVerifier.fixDate(then);
+    return this.manage(
+      this.checkDefined() && this.entry!.getTime() > (fixedThen?.getTime() ?? Number.MIN_VALUE),
+      (d) => this.errorManager.after(fixedThen, this.entry, d),
       !this.entry,
     );
+  };
 
   /**
    * Makes sure that the Date is the defined range

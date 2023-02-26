@@ -1,10 +1,12 @@
-import { DateVerifier, VerifierFactory } from "../../src";
+import {
+  ArrayVerifier,
+  DateVerifier,
+  NumberVerifier,
+  ObjectsVerifier,
+  StringVerifier,
+  VerifierFactory
+} from "../../src";
 import { Forger } from "@artstesh/forger";
-import { NumberVerifier } from "../../src";
-import { StringVerifier } from "../../src";
-import { ObjectsVerifier } from "../../src";
-import { ArrayVerifier } from "../../src";
-import { GeneralVerifier } from "../../src";
 
 describe('VerifierFactory', () => {
 
@@ -31,12 +33,6 @@ describe('VerifierFactory', () => {
     const result = VerifierFactory.getInstance().array(Forger.create<string[]>());
     //
     expect(typeof result == typeof ArrayVerifier)
-  })
-
-  it('creates general verifier', () => {
-    const result = VerifierFactory.getInstance().general(Forger.create<string[]>());
-    //
-    expect(typeof result == typeof GeneralVerifier)
   })
 
   it('creates date verifier', () => {
