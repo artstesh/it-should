@@ -1,7 +1,7 @@
-import { OrderingComparer } from "./utils/ordering.comparer";
-import { ArrayOrderedSettings } from "../models/array-ordered.settings";
-import { GeneralVerifier } from "./general.verifier";
-import { ArrayError } from "../errors/array.error";
+import { OrderingComparer } from './utils/ordering.comparer';
+import { ArrayOrderedSettings } from '../models/array-ordered.settings';
+import { GeneralVerifier } from './general.verifier';
+import { ArrayError } from '../errors/array.error';
 
 /**
  * An inspector responsible for an array verifications

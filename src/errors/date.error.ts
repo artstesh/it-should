@@ -1,4 +1,4 @@
-import { CommonError } from "./common.error";
+import { CommonError } from './common.error';
 
 export class DateError extends CommonError {
   equals(expected?: Date | null, real?: Date | null, direct: boolean = true): string {

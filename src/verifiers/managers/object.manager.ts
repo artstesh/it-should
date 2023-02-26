@@ -1,4 +1,5 @@
-import { ShouldError } from "../../models/should.error";
+import { ShouldError } from '../../models/should.error';
+import { ObjectsError } from '../../errors/objects.error';
 
 export class ObjectManager<T> {
   private entry: T;
@@ -12,8 +13,8 @@ export class ObjectManager<T> {
     return result;
   }
 
-  constructor(entry: T) {
-    if (!entry) throw new ShouldError('The object is not defined.');
+  constructor(entry: T, protected errorManager: ObjectsError) {
+    if (!entry) throw new ShouldError(this.errorManager.defined());
     if (typeof entry !== 'object') throw new ShouldError(`Illegal try to compare '${typeof entry}' as object.`);
     this.entry = entry;
     this.defineProps();

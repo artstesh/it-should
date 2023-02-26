@@ -1,4 +1,4 @@
-import { CommonError } from "./common.error";
+import { CommonError } from './common.error';
 
 export class StringError extends CommonError {
   whitespace(real?: string | null, direct: boolean = true): string {

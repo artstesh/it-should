@@ -1,4 +1,4 @@
-import { CommonError } from "./common.error";
+import { CommonError } from './common.error';
 
 export class ArrayError extends CommonError {
   empty(direct = true): string {

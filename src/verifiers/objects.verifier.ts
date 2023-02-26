@@ -1,6 +1,6 @@
-import { ObjectManager } from "./managers/object.manager";
-import { ObjectsError } from "../errors/objects.error";
-import { GeneralVerifier } from "./general.verifier";
+import { ObjectManager } from './managers/object.manager';
+import { ObjectsError } from '../errors/objects.error';
+import { GeneralVerifier } from './general.verifier';
 
 /**
  * An inspector responsible for comparison of objects
@@ -12,8 +12,8 @@ export class ObjectsVerifier<T, P> extends GeneralVerifier<T | null | undefined>
 
   constructor(protected entry: T, private other: P, protected errorManager: ObjectsError) {
     super(entry);
-    this.entryManager = new ObjectManager(entry);
-    this.otherManager = new ObjectManager(other);
+    this.entryManager = new ObjectManager(entry, errorManager);
+    this.otherManager = new ObjectManager(other, errorManager);
   }
 
   /**
@@ -22,7 +22,10 @@ export class ObjectsVerifier<T, P> extends GeneralVerifier<T | null | undefined>
    * @throws {@link ShouldError} if objects are different accordingly to the defined rules.
    */
   equal(): ObjectsVerifier<T, P> {
-    return this.manage(this.compareKeys(this.entryManager, this.otherManager), (d) => this.errorManager.equal(d));
+    this.checkDefined();
+    const error = this.compareKeys(this.entryManager, this.otherManager);
+    if (this.notIsActivated) return this.manage(!error, (d) => this.errorManager.equal(d));
+    return this.manage(!error, () => error);
   }
 
   /**
@@ -66,21 +69,26 @@ export class ObjectsVerifier<T, P> extends GeneralVerifier<T | null | undefined>
     return this;
   }
 
-  private compareKeys<Z, R>(obj1: ObjectManager<Z>, obj2: ObjectManager<R>): boolean {
+  private compareKeys<Z, R>(obj1: ObjectManager<Z>, obj2: ObjectManager<R>): string {
+    let result = '';
     const props = obj1.getProperties();
-    this.manage(props.size === obj2.countProperties(), () => this.errorManager.countProperties());
+    const sameCount = props.size === obj2.countProperties();
+    if (!sameCount) return this.errorManager.countProperties();
     props.forEach((p) => {
+      if (!!result) return;
       const val1 = obj1.getValue(p + '');
       const val2 = obj2.getValue(p + '');
-      if (!!this._rules[p + ''])
-        this.manage(this._rules[p + ''](val1, val2), () => this.errorManager.customRule(p + ''));
-      else if (val1 instanceof Date)
-        this.manage(val1?.toString() === val2?.toString(), () =>
-          this.errorManager.differentVals(p + '', val1, val2),
+      if (!!this._rules?.[p + '']) {
+        if (!this._rules[p + ''](val1, val2)) result = this.errorManager.customRule(p + '');
+      } else if (val1 instanceof Date) {
+        if (val1?.toString() !== val2?.toString()) result = this.errorManager.differentVals(p + '', val1, val2);
+      } else if (typeof val1 === 'object')
+        result = this.compareKeys(
+          new ObjectManager(val1, this.errorManager),
+          new ObjectManager(val2, this.errorManager),
         );
-      else if (typeof val1 === 'object') this.compareKeys(new ObjectManager(val1), new ObjectManager(val2));
-      else this.manage(val1 === val2, () => this.errorManager.differentVals(p + '', val1, val2));
+      else if (val1 !== val2) result = this.errorManager.differentVals(p + '', val1, val2);
     });
-    return true;
+    return result;
   }
 }

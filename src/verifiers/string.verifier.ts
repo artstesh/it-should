@@ -1,6 +1,6 @@
-import { SingleParamFunc } from "./utils/verify.func";
-import { GeneralVerifier } from "./general.verifier";
-import { StringError } from "../errors/string.error";
+import { SingleParamFunc } from './utils/verify.func';
+import { GeneralVerifier } from './general.verifier';
+import { StringError } from '../errors/string.error';
 
 /**
  * An inspector responsible for a string verifications
@@ -92,6 +92,7 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
    * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
    */
   contains(expected: string, counter?: SingleParamFunc<number>): void {
+    this.checkDefined();
     const count = (this.entry?.split(expected)?.length ?? 0) - 1;
     const error = (d: boolean) => this.errorManager.contains(expected, this.entry, d);
     this.manage(!!counter ? counter(count) : count > 0, error);
@@ -105,6 +106,7 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
    * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
    */
   containsIgnoreCase(expected: string, counter?: SingleParamFunc<number>): void {
+    this.checkDefined();
     const count = (this.entry?.toUpperCase()?.split(expected?.toUpperCase())?.length ?? 0) - 1;
     const error = (d: boolean) => this.errorManager.containsIgnoreCase(expected, this.entry, d);
     this.manage(!!counter ? counter(count) : count > 0, error);
@@ -117,6 +119,7 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
    * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
    */
   containsAny(...expected: string[]): void {
+    this.checkDefined();
     let found = 0;
     if (!!this.entry) found = expected.map((e) => this.entry?.indexOf(e) !== -1).filter((e) => e)?.length ?? 0;
     this.manage(found > 0, (d) => this.errorManager.containsAny(this.entry, d));
@@ -129,6 +132,7 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
    * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
    */
   containsAnyIgnoreCase(...expected: string[]): void {
+    this.checkDefined();
     let found = 0;
     if (!!this.entry)
       found =

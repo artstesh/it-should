@@ -1,5 +1,5 @@
-import { AbstractVerifier } from "./abstract.verifier";
-import { CommonError } from "../errors/common.error";
+import { AbstractVerifier } from './abstract.verifier';
+import { CommonError } from '../errors/common.error';
 
 /**
  * An inspector responsible for comparison of objects

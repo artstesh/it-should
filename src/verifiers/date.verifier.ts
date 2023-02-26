@@ -1,5 +1,5 @@
-import { GeneralVerifier } from "./general.verifier";
-import { DateError } from "../errors/date.error";
+import { GeneralVerifier } from './general.verifier';
+import { DateError } from '../errors/date.error';
 
 export type DateAccuracy = 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' | 'millisecond';
 
@@ -35,8 +35,9 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   before = (then: Date | string): DateVerifier => {
+    this.checkDefined();
     const fixedThen = DateVerifier.fixDate(then);
-    return this.manage(this.checkDefined() && this.entry!.getTime() < (fixedThen?.getTime() ?? Number.MAX_VALUE), (d) =>
+    return this.manage(this.entry!.getTime() < (fixedThen?.getTime() ?? Number.MAX_VALUE), (d) =>
       this.errorManager.before(fixedThen, this.entry, d),
     );
   };
@@ -48,11 +49,10 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
    * @throws {@link ShouldError} if the number is not defined regardless the presence/absence of not() function.
    */
   after = (then: Date | string): DateVerifier => {
+    this.checkDefined();
     const fixedThen = DateVerifier.fixDate(then);
-    return this.manage(
-      this.checkDefined() && this.entry!.getTime() > (fixedThen?.getTime() ?? Number.MIN_VALUE),
-      (d) => this.errorManager.after(fixedThen, this.entry, d),
-      !this.entry,
+    return this.manage(this.entry!.getTime() > (fixedThen?.getTime() ?? Number.MIN_VALUE), (d) =>
+      this.errorManager.after(fixedThen, this.entry, d),
     );
   };
 

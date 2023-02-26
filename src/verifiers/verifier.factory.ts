@@ -1,13 +1,13 @@
-import { NumberVerifier } from "./number.verifier";
-import { StringVerifier } from "./string.verifier";
-import { ObjectsVerifier } from "./objects.verifier";
-import { ArrayVerifier } from "./array.verifier";
-import { DateVerifier } from "./date.verifier";
-import { ArrayError } from "../errors/array.error";
-import { NumberError } from "../errors/number.error";
-import { ObjectsError } from "../errors/objects.error";
-import { StringError } from "../errors/string.error";
-import { DateError } from "../errors/date.error";
+import { NumberVerifier } from './number.verifier';
+import { StringVerifier } from './string.verifier';
+import { ObjectsVerifier } from './objects.verifier';
+import { ArrayVerifier } from './array.verifier';
+import { DateVerifier } from './date.verifier';
+import { ArrayError } from '../errors/array.error';
+import { NumberError } from '../errors/number.error';
+import { ObjectsError } from '../errors/objects.error';
+import { StringError } from '../errors/string.error';
+import { DateError } from '../errors/date.error';
 
 /**
  * The factory that provides a concrete inspector
