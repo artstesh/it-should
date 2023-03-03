@@ -8,7 +8,7 @@ import { NumberError } from '../errors/number.error';
 import { ObjectsError } from '../errors/objects.error';
 import { StringError } from '../errors/string.error';
 import { DateError } from '../errors/date.error';
-import { ShouldError } from "../models/should.error";
+import { ShouldError } from '../models/should.error';
 
 /**
  * The factory that provides a concrete inspector

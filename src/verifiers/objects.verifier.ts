@@ -86,7 +86,7 @@ export class ObjectsVerifier<T, P> extends GeneralVerifier<T | null | undefined>
         result = this.compareKeys(
           new ObjectManager(val1, this.errorManager),
           new ObjectManager(val2, this.errorManager),
-          [...path, p+'']
+          [...path, p + ''],
         );
       else if (val1 !== val2) result = this.errorManager.differentVals([...path, p].join('.'), val1, val2);
     });
