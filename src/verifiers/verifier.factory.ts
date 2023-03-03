@@ -8,6 +8,7 @@ import { NumberError } from '../errors/number.error';
 import { ObjectsError } from '../errors/objects.error';
 import { StringError } from '../errors/string.error';
 import { DateError } from '../errors/date.error';
+import { ShouldError } from "../models/should.error";
 
 /**
  * The factory that provides a concrete inspector
@@ -63,5 +64,13 @@ export class VerifierFactory {
    */
   public date(entry: Date | string | null | undefined): DateVerifier {
     return new DateVerifier(entry, new DateError());
+  }
+
+  public true(entry: boolean): void {
+    if (!entry) throw new ShouldError('The entry expected to be true.');
+  }
+
+  public false(entry: boolean): void {
+    if (entry) throw new ShouldError('The entry expected to be false.');
   }
 }

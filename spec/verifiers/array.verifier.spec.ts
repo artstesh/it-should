@@ -500,7 +500,7 @@ describe('ArrayVerifier', () => {
         const idMax = 500;
         let entry = Forger.create<ITest[]>({numberMax: idMax})!;
         //
-        expect(() => new ArrayVerifier(entry, instance(errorManager)).containByExactly(3,e => e!.id < idMax)).not.toThrow();
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).containByExactly(3,e => e!.id <= idMax)).not.toThrow();
       })
 
       it('throws if not contains', () => {

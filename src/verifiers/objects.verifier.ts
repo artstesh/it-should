@@ -69,7 +69,7 @@ export class ObjectsVerifier<T, P> extends GeneralVerifier<T | null | undefined>
     return this;
   }
 
-  private compareKeys<Z, R>(obj1: ObjectManager<Z>, obj2: ObjectManager<R>): string {
+  private compareKeys<Z, R>(obj1: ObjectManager<Z>, obj2: ObjectManager<R>, path: string[] = []): string {
     let result = '';
     const props = obj1.getProperties();
     const sameCount = props.size === obj2.countProperties();
@@ -86,8 +86,9 @@ export class ObjectsVerifier<T, P> extends GeneralVerifier<T | null | undefined>
         result = this.compareKeys(
           new ObjectManager(val1, this.errorManager),
           new ObjectManager(val2, this.errorManager),
+          [...path, p+'']
         );
-      else if (val1 !== val2) result = this.errorManager.differentVals(p + '', val1, val2);
+      else if (val1 !== val2) result = this.errorManager.differentVals([...path, p].join('.'), val1, val2);
     });
     return result;
   }

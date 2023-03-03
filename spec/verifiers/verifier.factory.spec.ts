@@ -7,6 +7,7 @@ import {
   VerifierFactory
 } from "../../src";
 import { Forger } from "@artstesh/forger";
+import { ShouldError } from "../../src/models/should.error";
 
 describe('VerifierFactory', () => {
 
@@ -39,5 +40,23 @@ describe('VerifierFactory', () => {
     const result = VerifierFactory.getInstance().date(Forger.create<Date>());
     //
     expect(typeof result == typeof DateVerifier)
+  })
+
+  describe('true', () => {
+    it('success', () => {
+      expect(() => VerifierFactory.getInstance().true(true)).not.toThrow();
+    })
+    it('throws', () => {
+      expect(() => VerifierFactory.getInstance().true(false)).toThrow(ShouldError);
+    })
+  })
+
+  describe('false', () => {
+    it('success', () => {
+      expect(() => VerifierFactory.getInstance().false(false)).not.toThrow();
+    })
+    it('throws', () => {
+      expect(() => VerifierFactory.getInstance().false(true)).toThrow(ShouldError);
+    })
   })
 })
