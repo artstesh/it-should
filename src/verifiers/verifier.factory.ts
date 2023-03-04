@@ -1,14 +1,14 @@
-import { NumberVerifier } from './number.verifier';
-import { StringVerifier } from './string.verifier';
-import { ObjectsVerifier } from './objects.verifier';
-import { ArrayVerifier } from './array.verifier';
-import { DateVerifier } from './date.verifier';
-import { ArrayError } from '../errors/array.error';
-import { NumberError } from '../errors/number.error';
-import { ObjectsError } from '../errors/objects.error';
-import { StringError } from '../errors/string.error';
-import { DateError } from '../errors/date.error';
-import { ShouldError } from '../models/should.error';
+import { NumberVerifier } from "./number.verifier";
+import { StringVerifier } from "./string.verifier";
+import { ObjectsVerifier } from "./objects.verifier";
+import { ArrayVerifier } from "./array.verifier";
+import { DateVerifier } from "./date.verifier";
+import { ArrayError } from "../errors/array.error";
+import { NumberError } from "../errors/number.error";
+import { ObjectsError } from "../errors/objects.error";
+import { StringError } from "../errors/string.error";
+import { DateError } from "../errors/date.error";
+import { ShouldError } from "../models/should.error";
 
 /**
  * The factory that provides a concrete inspector
@@ -16,7 +16,8 @@ import { ShouldError } from '../models/should.error';
 export class VerifierFactory {
   private static instance = new VerifierFactory();
 
-  private constructor() {}
+  private constructor() {
+  }
 
   public static getInstance = () => VerifierFactory.instance;
 
@@ -66,11 +67,26 @@ export class VerifierFactory {
     return new DateVerifier(entry, new DateError());
   }
 
-  public true(entry: boolean): void {
-    if (!entry) throw new ShouldError('The entry expected to be true.');
+  /**
+   * Makes sure that the value is true in a boolean context.
+   * Falsy values: false, 0, '', null, undefined, and NaN. Everything else is truthy.
+   * @param entry A value that should be examined
+   */
+  public true(entry: any): void {
+    let result = true;
+    if (entry == null) result = false;
+    else if (!entry && entry !== 0) result = false;
+    if (!result) throw new ShouldError("The entry expected to be true.");
   }
 
-  public false(entry: boolean): void {
-    if (entry) throw new ShouldError('The entry expected to be false.');
+  /**
+   * Makes sure that the value is false in a boolean context.
+   * Falsy values: false, 0, '', null, undefined, and NaN. Everything else is truthy.
+   * @param entry A value that should be examined
+   */
+  public false(entry: any): void {
+    let result = true;
+    if (!!entry || entry === 0) result = false;
+    if (!result) throw new ShouldError("The entry expected to be false.");
   }
 }

@@ -534,7 +534,8 @@ describe('ArrayVerifier', () => {
         const expectedTimes = 3;
         when(errorManager.containByExactly(expectedTimes, entry.length, false)).thenReturn(errorMessage);
         //
-        expect(() => new ArrayVerifier(entry, instance(errorManager)).not.containByExactly(expectedTimes,e => e!.id < idMax)).toThrow(expectedError);
+        expect(() => new ArrayVerifier(entry, instance(errorManager))
+          .not.containByExactly(expectedTimes,e => e!.id <= idMax)).toThrow(expectedError);
       })
 
       it('success if not contains', () => {
