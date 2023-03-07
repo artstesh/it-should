@@ -545,4 +545,65 @@ describe('ArrayVerifier', () => {
       })
     })
   })
+
+  describe('uniq', () => {
+    describe('direct', () => {
+      it('entry not defined throws', () => {
+        when(errorManager.defined(true)).thenReturn(errorMessage);
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).uniq()).toThrow(expectedError);
+      })
+
+      it('primitive success', () => {
+        let entry = Forger.create<string[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).uniq()).not.toThrow();
+      })
+
+      it('object success', () => {
+        let entry = Forger.create<ITest[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).uniq(e => e!.name)).not.toThrow();
+      })
+
+      it('throws if has duplicates', () => {
+        const element = Forger.create<string>()!;
+        const entry = [element, element];
+        when(errorManager.uniq(true)).thenReturn(errorMessage);
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).uniq()).toThrow(expectedError);
+      })
+    })
+
+    describe('with not', () => {
+      it('entry not defined throws', () => {
+        when(errorManager.defined(true)).thenReturn(errorMessage);
+        let entry: number[];
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).not.uniq()).toThrow(expectedError);
+      })
+
+      it('primitive success', () => {
+        when(errorManager.uniq(false)).thenReturn(errorMessage);
+        let entry = Forger.create<string[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).not.uniq()).toThrow(expectedError);
+      })
+
+      it('object success', () => {
+        when(errorManager.uniq(false)).thenReturn(errorMessage);
+        let entry = Forger.create<ITest[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).not.uniq(e => e!.name)).toThrow(expectedError);
+      })
+
+      it('throws if has duplicates', () => {
+        const element = Forger.create<string>()!;
+        const entry = [element, element];
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).not.uniq()).not.toThrow();
+      })
+    })
+  })
 })

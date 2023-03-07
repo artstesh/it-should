@@ -42,4 +42,8 @@ export class ArrayError extends CommonError {
       ? `The collection's has ${real}, instead of ${expected} elements.`
       : `The collection's has ${real} elements, but should not.`;
   }
+
+  uniq(direct = true): string {
+    return direct ? 'The collection contains duplicated elements.' : 'The collection does not contain duplicated elements.';
+  }
 }

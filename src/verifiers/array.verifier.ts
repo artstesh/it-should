@@ -125,6 +125,20 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
     return this;
   }
 
+  /**
+   * Makes sure that the array contains only unique elements
+   * @param identifier A function that allows to an element's identifier.
+   * The function is actual for objects first of all, and shouldn't be defined in case of primitives.
+   * @throws {@link ShouldError} if the array contains duplicates.
+   * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
+   */
+  uniq(identifier: (e?: T | null) => any = (x) => x): ArrayVerifier<T> {
+    this.checkDefined();
+    const result = !!identifier ? this.entry?.map((e) => identifier(e)) : this.entry;
+    this.manage(new Set(result).size === result?.length, (d) => this.errorManager.uniq(d));
+    return this;
+  }
+
   // OnlyHaveUniqueItems(x => x)
   // Equal
   // BeEquivalentTo([],x => x)
