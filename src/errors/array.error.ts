@@ -44,6 +44,8 @@ export class ArrayError extends CommonError {
   }
 
   uniq(direct = true): string {
-    return direct ? 'The collection contains duplicated elements.' : 'The collection does not contain duplicated elements.';
+    return direct
+      ? 'The collection contains duplicated elements.'
+      : 'The collection does not contain duplicated elements.';
   }
 }
