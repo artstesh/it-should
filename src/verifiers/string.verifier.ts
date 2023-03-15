@@ -148,6 +148,6 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
    */
   match(exp: string | RegExp): void {
     this.checkDefined();
-    this.manage(!!this.entry?.match(exp), (d) => this.errorManager.match(this.entry,exp, d));
+    this.manage(!!this.entry?.match(exp), (d) => this.errorManager.match(this.entry, exp, d));
   }
 }

@@ -52,8 +52,6 @@ export class StringError extends CommonError {
   }
 
   match(real: string | null | undefined, exp: string | RegExp, direct: boolean = true): string {
-    return direct
-      ? `'${real}' does not match ${exp}.`
-      : `'${real}' does match ${exp}, but should not.`;
+    return direct ? `'${real}' does not match ${exp}.` : `'${real}' does match ${exp}, but should not.`;
   }
 }

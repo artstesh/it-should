@@ -151,7 +151,7 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
     this.checkDefined();
     let result = this.entry?.length === expected.length;
     for (let i = 0; i < this.entry!.length && result; i++)
-        result = !!identifier ? identifier(this.entry![i]) === identifier(expected[i]) : this.entry![i] === expected[i];
+      result = !!identifier ? identifier(this.entry![i]) === identifier(expected[i]) : this.entry![i] === expected[i];
     this.manage(result, (d) => this.errorManager.equal(d));
     return this;
   }
