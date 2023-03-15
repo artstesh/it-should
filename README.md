@@ -19,7 +19,7 @@ describe('student.service', () => {
 });
 ```
 
-If the service fails and returns an unsorted collection, the test will fail and we will see ```Elements aren't ordered.``` in the console.
+If the service fails and returns an unsorted collection, the test will fail, and we will see ```Elements aren't ordered.``` in the console.
 
 Of course, it would be possible to prepare the data by leaving only two records in the returned collection and sorting it in reverse order, and compare only these two records in ```expected```... But all these actions, no matter how primitive and simple they were, create quite an impressive amount of work in a real application. It is for such simplifications that this mini-library is created.
 

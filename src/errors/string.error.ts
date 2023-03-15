@@ -50,4 +50,10 @@ export class StringError extends CommonError {
       ? `'${real}' does not contain any of expected.`
       : `'${real}' does contain some of expected, but should not.`;
   }
+
+  match(real: string | null | undefined, exp: string | RegExp, direct: boolean = true): string {
+    return direct
+      ? `'${real}' does not match ${exp}.`
+      : `'${real}' does match ${exp}, but should not.`;
+  }
 }

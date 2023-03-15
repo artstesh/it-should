@@ -139,4 +139,15 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
         expected.map((e) => this.entry?.toUpperCase().indexOf(e.toUpperCase()) !== -1).filter((e) => e)?.length ?? 0;
     this.manage(found > 0, (d) => this.errorManager.containsAnyIgnoreCase(this.entry, d));
   }
+
+  /**
+   * Makes sure that the examined string matches the expected expression.
+   * @param exp A regular expression object
+   * @throws {@link ShouldError} if the string doesn't match the expected expression.
+   * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
+   */
+  match(exp: string | RegExp): void {
+    this.checkDefined();
+    this.manage(!!this.entry?.match(exp), (d) => this.errorManager.match(this.entry,exp, d));
+  }
 }

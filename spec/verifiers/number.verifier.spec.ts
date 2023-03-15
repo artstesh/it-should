@@ -522,14 +522,14 @@ describe('NumberVerifier', () => {
       expect(() => new NumberVerifier(entry, instance(errorManager)).inRange(entry-1, entry+1)).not.toThrow();
     })
 
-    it('min equaly throws', () => {
+    it('min equals throws', () => {
       const entry = Forger.create<number>()!;
       when(errorManager.inRange(entry, entry+1,entry, true)).thenReturn(errorMessage);
       //
       expect(() => new NumberVerifier(entry, instance(errorManager)).inRange(entry, entry+1)).toThrow(expectedError);
     })
 
-    it('max equaly throws', () => {
+    it('max equals throws', () => {
       const entry = Forger.create<number>()!;
       when(errorManager.inRange(entry-1, entry,entry, true)).thenReturn(errorMessage);
       //
@@ -568,7 +568,7 @@ describe('NumberVerifier', () => {
       expect(() => new NumberVerifier(entry, instance(errorManager)).not.inRange(entry-1, entry+1)).toThrow(expectedError);
     })
 
-    it('equaly success', () => {
+    it('equals success', () => {
       const entry = Forger.create<number>()!;
       //
       expect(() => new NumberVerifier(entry, instance(errorManager)).not.inRange(entry, entry+1)).not.toThrow();
@@ -604,7 +604,7 @@ describe('NumberVerifier', () => {
       expect(() => new NumberVerifier(entry, instance(errorManager)).approximately(entry+.1, .5)).not.toThrow();
     })
 
-    it('equaly success', () => {
+    it('equals success', () => {
       const entry = Forger.create<number>()!;
       //
       expect(() => new NumberVerifier(entry, instance(errorManager)).approximately(entry, .1)).not.toThrow();
@@ -642,7 +642,7 @@ describe('NumberVerifier', () => {
       expect(() => new NumberVerifier(entry, instance(errorManager)).not.approximately(entry+.1, .5)).toThrow(expectedError);
     })
 
-    it('equaly throws', () => {
+    it('equals throws', () => {
       const entry = Forger.create<number>()!;
       when(errorManager.approximately(entry, entry, false)).thenReturn(errorMessage);
       //

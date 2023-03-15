@@ -5,6 +5,10 @@ export class ArrayError extends CommonError {
     return direct ? 'The collection is not empty.' : 'The collection is empty.';
   }
 
+  equal(direct = true): string {
+    return direct ? 'The collections are not equal.' : 'The collections are equal, but should not.';
+  }
+
   ordered(direct = true): string {
     return direct ? "Elements aren't ordered." : 'Elements are ordered.';
   }

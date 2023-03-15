@@ -94,7 +94,7 @@ describe('ObjectsVerifier', () => {
         const entry = Forger.create<IMapTest>()!;
         const exp = Forger.create<IMapOtherTest>()!;
         exp.id = entry.id;
-        when(errorManager.differentVals('name', entry.name, exp.fullName)).thenReturn(errorMessage);
+        when(errorManager.differentValues('name', entry.name, exp.fullName)).thenReturn(errorMessage);
         //
         expect(() => new ObjectsVerifier(entry,exp, instance(errorManager))
           .map('name', 'fullName').equal()).toThrow(expectedError);
@@ -117,7 +117,7 @@ describe('ObjectsVerifier', () => {
         const entry = Forger.create<IMapTest>()!;
         const exp = Forger.create<IMapOtherTest>()!;
         exp.id = entry.id;
-        when(errorManager.differentVals('name', entry.name, exp.fullName)).thenReturn(errorMessage);
+        when(errorManager.differentValues('name', entry.name, exp.fullName)).thenReturn(errorMessage);
         //
         expect(() => new ObjectsVerifier(entry,exp, instance(errorManager))
           .map('name', 'fullName').not.equal()).not.toThrow();

@@ -81,14 +81,14 @@ export class ObjectsVerifier<T, P> extends GeneralVerifier<T | null | undefined>
       if (!!this._rules?.[p + '']) {
         if (!this._rules[p + ''](val1, val2)) result = this.errorManager.customRule(p + '');
       } else if (val1 instanceof Date) {
-        if (val1?.toString() !== val2?.toString()) result = this.errorManager.differentVals(p + '', val1, val2);
+        if (val1?.toString() !== val2?.toString()) result = this.errorManager.differentValues(p + '', val1, val2);
       } else if (typeof val1 === 'object')
         result = this.compareKeys(
           new ObjectManager(val1, this.errorManager),
           new ObjectManager(val2, this.errorManager),
           [...path, p + ''],
         );
-      else if (val1 !== val2) result = this.errorManager.differentVals([...path, p].join('.'), val1, val2);
+      else if (val1 !== val2) result = this.errorManager.differentValues([...path, p].join('.'), val1, val2);
     });
     return result;
   }

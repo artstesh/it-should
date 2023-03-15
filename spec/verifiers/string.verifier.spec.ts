@@ -797,4 +797,49 @@ describe('StringVerifier', () => {
       expect(() => new StringVerifier(entry, instance(errorManager)).containsAnyIgnoreCase(...expected)).not.toThrow();
     });
   })
+
+  describe('match', () => {
+
+    describe('direct', () => {
+      it("entry undefined throws", () => {
+        when(errorManager.defined(true)).thenReturn(errorMessage);
+        //
+        expect(() => new StringVerifier(undefined, instance(errorManager)).match(/./gm)).toThrow(expectedError);
+      });
+
+      it("entry null throws", () => {
+        when(errorManager.defined(true)).thenReturn(errorMessage);
+        //
+        expect(() => new StringVerifier(null, instance(errorManager)).match(/./gm)).toThrow(expectedError);
+      });
+
+      it("matches success", () => {
+        const entry = Forger.create<string>({stringLowCase: false, stringSpecial: false, stringUpCase: false})!;
+        //
+        expect(() => new StringVerifier(entry, instance(errorManager)).match(/\d/gm)).not.toThrow();
+      });
+    })
+
+    describe('not', () => {
+      it("entry undefined throws", () => {
+        when(errorManager.defined(true)).thenReturn(errorMessage);
+        //
+        expect(() => new StringVerifier(undefined, instance(errorManager)).not.match(/./gm)).toThrow(expectedError);
+      });
+
+      it("entry null throws", () => {
+        when(errorManager.defined(true)).thenReturn(errorMessage);
+        //
+        expect(() => new StringVerifier(null, instance(errorManager)).not.match(/./gm)).toThrow(expectedError);
+      });
+
+      it("matches throws", () => {
+        let exp = /\d/gm;
+        const entry = Forger.create<string>()!;
+        when(errorManager.match(entry, exp, false)).thenReturn(errorMessage);
+        //
+        expect(() => new StringVerifier(entry, instance(errorManager)).not.match(exp)).toThrow(expectedError);
+      });
+    })
+  })
 })

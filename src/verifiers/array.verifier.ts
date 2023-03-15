@@ -139,8 +139,23 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
     return this;
   }
 
-  // OnlyHaveUniqueItems(x => x)
-  // Equal
+  /**
+   * Makes sure that the array contains same elements in the same order as the expected one.
+   * @param expected The array to be compared.
+   * @param identifier A function that allows to an element's identifier.
+   * The function is actual for objects first of all, and shouldn't be defined in case of primitives.
+   * @throws {@link ShouldError} if the arrays don't equal.
+   * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
+   */
+  equal(expected: T[], identifier: (e?: T | null) => any = (x) => x): ArrayVerifier<T> {
+    this.checkDefined();
+    let result = this.entry?.length === expected.length;
+    for (let i = 0; i < this.entry!.length && result; i++)
+        result = !!identifier ? identifier(this.entry![i]) === identifier(expected[i]) : this.entry![i] === expected[i];
+    this.manage(result, (d) => this.errorManager.equal(d));
+    return this;
+  }
+
   // BeEquivalentTo([],x => x)
   // HaveSameCount([])
   // HaveCountGreaterThan

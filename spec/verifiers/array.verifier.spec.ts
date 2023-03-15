@@ -606,4 +606,86 @@ describe('ArrayVerifier', () => {
       })
     })
   })
+
+  describe('equal', () => {
+    describe('direct', () => {
+      it('entry not defined throws', () => {
+        when(errorManager.defined(true)).thenReturn(errorMessage);
+        let entry: number[];
+        const compareWith: number[] = Forger.create<number[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).equal(compareWith)).toThrow(expectedError);
+      })
+
+      it('primitive success', () => {
+        let entry = Forger.create<string[]>()!;
+        const compareWith = [...entry];
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).equal(compareWith)).not.toThrow();
+      })
+
+      it('object success', () => {
+        let entry = Forger.create<ITest[]>()!;
+        const compareWith = [...entry.map(e => ({...e}))];
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).equal(compareWith,e => e!.name)).not.toThrow();
+      })
+
+      it('throws if different', () => {
+        const entry = Forger.create<number[]>()!;
+        const compareWith: number[] = Forger.create<number[]>()!;
+        when(errorManager.equal(true)).thenReturn(errorMessage);
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).equal(compareWith)).toThrow(expectedError);
+      })
+
+      it('throws if unordered', () => {
+        const entry = [1,2,3];
+        const compareWith = [2,1,3];
+        when(errorManager.equal(true)).thenReturn(errorMessage);
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).equal(compareWith)).toThrow(expectedError);
+      })
+    })
+
+    describe('with not', () => {
+      it('entry not defined throws', () => {
+        when(errorManager.defined(true)).thenReturn(errorMessage);
+        let entry: number[];
+        const compareWith: number[] = Forger.create<number[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).not.equal(compareWith)).toThrow(expectedError);
+      })
+
+      it('primitives equal throws', () => {
+        when(errorManager.equal(false)).thenReturn(errorMessage);
+        let entry = Forger.create<string[]>()!;
+        const compareWith = [...entry];
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).not.equal(compareWith)).toThrow(expectedError);
+      })
+
+      it('objects equal throws', () => {
+        when(errorManager.equal(false)).thenReturn(errorMessage);
+        let entry = Forger.create<ITest[]>()!;
+        const compareWith = [...entry.map(e => ({...e}))];
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).not.equal(compareWith,e => e!.name)).toThrow(expectedError);
+      })
+
+      it('success if different', () => {
+        const entry = Forger.create<number[]>()!;
+        const compareWith: number[] = Forger.create<number[]>()!;
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).not.equal(compareWith)).not.toThrow();
+      })
+
+      it('success if unordered', () => {
+        const entry = [1,2,3];
+        const compareWith = [2,1,3];
+        //
+        expect(() => new ArrayVerifier(entry, instance(errorManager)).not.equal(compareWith)).not.toThrow();
+      })
+    })
+  })
 })

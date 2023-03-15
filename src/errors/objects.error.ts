@@ -9,7 +9,7 @@ export class ObjectsError extends CommonError {
     return `Objects failed custom rule for '${name}'.`;
   }
 
-  differentVals(name: string, val1: any, val2: any): string {
+  differentValues(name: string, val1: any, val2: any): string {
     return `Objects have different '${name}': ${JSON.stringify(val1)} & ${JSON.stringify(val2)}.`;
   }
 

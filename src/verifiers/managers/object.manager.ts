@@ -2,7 +2,7 @@ import { ShouldError } from '../../models/should.error';
 import { ObjectsError } from '../../errors/objects.error';
 
 export class ObjectManager<T> {
-  private entry: T;
+  private readonly entry: T;
   private props = new Set<string>();
   private ignoring = new Set<string>();
   private mapping: { [name: string]: string } = {};
