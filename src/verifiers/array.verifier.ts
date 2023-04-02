@@ -156,6 +156,33 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
     return this;
   }
 
+  /**
+   * Makes sure that the array contains same elements as the expected one, in any order.
+   * @param expected The array to be compared.
+   * @param identifier A function that allows to an element's identifier.
+   * The function is actual for objects first of all, and shouldn't be defined in case of primitives.
+   * @throws {@link ShouldError} if the arrays don't equal.
+   * @throws {@link ShouldError} if the array is not defined regardless the presence/absence of not() function.
+   */
+  equalUnordered(expected: T[], identifier: (e?: T | null) => any = (x) => x): ArrayVerifier<T> {
+    this.checkDefined();
+    let result = this.entry?.length === expected.length;
+    if (result){
+      const orderedOriginal = ArrayVerifier.orderCollection(this.entry!.map(e => !!identifier ? identifier(e) : e));
+      const orderedExp = ArrayVerifier.orderCollection(expected.map(e => !!identifier ? identifier(e) : e));
+      for (let i = 0; i < orderedOriginal.length && result; i++)
+        result = orderedOriginal[i] === orderedExp[i];
+    }
+    this.manage(result, (d) => this.errorManager.equal(d));
+    return this;
+  }
+
+  private static orderCollection<C>(collection: C[]): C[] {
+    const result = [...collection];
+    result.sort();
+    return result;
+  }
+
   // BeEquivalentTo([],x => x)
   // HaveSameCount([])
   // HaveCountGreaterThan
