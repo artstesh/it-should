@@ -167,11 +167,10 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
   equalUnordered(expected: T[], identifier: (e?: T | null) => any = (x) => x): ArrayVerifier<T> {
     this.checkDefined();
     let result = this.entry?.length === expected.length;
-    if (result){
-      const orderedOriginal = ArrayVerifier.orderCollection(this.entry!.map(e => !!identifier ? identifier(e) : e));
-      const orderedExp = ArrayVerifier.orderCollection(expected.map(e => !!identifier ? identifier(e) : e));
-      for (let i = 0; i < orderedOriginal.length && result; i++)
-        result = orderedOriginal[i] === orderedExp[i];
+    if (result) {
+      const orderedOriginal = ArrayVerifier.orderCollection(this.entry!.map((e) => (!!identifier ? identifier(e) : e)));
+      const orderedExp = ArrayVerifier.orderCollection(expected.map((e) => (!!identifier ? identifier(e) : e)));
+      for (let i = 0; i < orderedOriginal.length && result; i++) result = orderedOriginal[i] === orderedExp[i];
     }
     this.manage(result, (d) => this.errorManager.equal(d));
     return this;
