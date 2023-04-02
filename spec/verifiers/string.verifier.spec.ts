@@ -834,7 +834,7 @@ describe('StringVerifier', () => {
       });
 
       it("matches throws", () => {
-        let exp = /\d/gm;
+        let exp = /./gm;
         const entry = Forger.create<string>()!;
         when(errorManager.match(entry, exp, false)).thenReturn(errorMessage);
         //
