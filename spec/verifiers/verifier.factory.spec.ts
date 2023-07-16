@@ -54,8 +54,8 @@ describe('VerifierFactory', () => {
       const entry = Forger.create<number>();
       expect(() => VerifierFactory.getInstance().true(entry)).not.toThrow();
     })
-    it('zero number success', () => {
-      expect(() => VerifierFactory.getInstance().true(0)).not.toThrow();
+    it('zero number throws', () => {
+      expect(() => VerifierFactory.getInstance().true(0)).toThrow(ShouldError);
     })
     it('boolean throws', () => {
       expect(() => VerifierFactory.getInstance().true(false)).toThrow(ShouldError);
@@ -104,7 +104,7 @@ describe('VerifierFactory', () => {
       expect(() => VerifierFactory.getInstance().false(entry)).toThrow(ShouldError);
     })
     it('zero number success', () => {
-      expect(() => VerifierFactory.getInstance().false(0)).toThrow(ShouldError);
+      expect(() => VerifierFactory.getInstance().false(0)).not.toThrow();
     })
   })
 })

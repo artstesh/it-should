@@ -74,7 +74,7 @@ export class VerifierFactory {
   public true(entry: any): void {
     let result = true;
     if (entry == null) result = false;
-    else if (!entry && entry !== 0) result = false;
+    else if (!entry) result = false;
     if (!result) throw new ShouldError('The entry expected to be true.');
   }
 
@@ -85,7 +85,7 @@ export class VerifierFactory {
    */
   public false(entry: any): void {
     let result = true;
-    if (!!entry || entry === 0) result = false;
+    if (!!entry) result = false;
     if (!result) throw new ShouldError('The entry expected to be false.');
   }
 }

@@ -182,7 +182,6 @@ export class ArrayVerifier<T> extends GeneralVerifier<(T | null | undefined)[] |
     return result;
   }
 
-  // BeEquivalentTo([],x => x)
   // HaveSameCount([])
   // HaveCountGreaterThan
   // HaveCountLessThan
