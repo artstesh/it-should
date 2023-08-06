@@ -1,12 +1,11 @@
-import { MethodError } from "../errors/method.error";
-import { GeneralVerifier } from "./general.verifier";
+import { MethodError } from '../errors/method.error';
+import { GeneralVerifier } from './general.verifier';
 
 /**
  * An inspector responsible for functions
  */
-export class MethodVerifier extends GeneralVerifier<null|undefined|((...params: any[]) => any)>{
-
-  constructor(entry: null|undefined|((...params:any[])=> any), protected errorManager: MethodError) {
+export class MethodVerifier extends GeneralVerifier<null | undefined | ((...params: any[]) => any)> {
+  constructor(entry: null | undefined | ((...params: any[]) => any), protected errorManager: MethodError) {
     super(entry);
     this.manage(this.entry != null, (d) => this.errorManager.defined(d), true);
   }
@@ -24,10 +23,9 @@ export class MethodVerifier extends GeneralVerifier<null|undefined|((...params: 
       thrown = false;
     } catch (e) {
       // ignore
-    }
-    finally {
+    } finally {
       // ignore
     }
-    return this.manage(thrown, (d) =>this.errorManager.throws(d));
+    return this.manage(thrown, (d) => this.errorManager.throws(d));
   };
 }
