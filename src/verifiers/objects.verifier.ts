@@ -69,7 +69,11 @@ export class ObjectsVerifier<T extends {}, P extends {}> extends GeneralVerifier
     return this;
   }
 
-  private compareKeys<Z extends {}, R extends {}>(obj1: ObjectManager<Z>, obj2: ObjectManager<R>, path: string[] = []): string {
+  private compareKeys<Z extends {}, R extends {}>(
+    obj1: ObjectManager<Z>,
+    obj2: ObjectManager<R>,
+    path: string[] = [],
+  ): string {
     let result = '';
     const props = obj1.getProperties();
     const sameCount = props.size === obj2.countProperties();
