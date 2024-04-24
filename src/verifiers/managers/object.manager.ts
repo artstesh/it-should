@@ -1,7 +1,7 @@
 import { ShouldError } from '../../models/should.error';
 import { ObjectsError } from '../../errors/objects.error';
 
-export class ObjectManager<T> {
+export class ObjectManager<T extends {}> {
   private readonly entry: T;
   private props = new Set<string>();
   private ignoring = new Set<string>();

@@ -25,7 +25,7 @@ describe('VerifierFactory', () => {
 
   it('creates objects verifier', () => {
     interface Test {field: string}
-    const result = VerifierFactory.getInstance().objects(Forger.create<Test>(), Forger.create<Test>());
+    const result = VerifierFactory.getInstance().objects(Forger.create<Test>()!, Forger.create<Test>()!);
     //
     expect(typeof result == typeof ObjectsVerifier)
   })

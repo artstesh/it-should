@@ -44,7 +44,7 @@ export class VerifierFactory {
    * @param other The second object that should be examined
    * @returns {@link ObjectsVerifier}
    */
-  public objects<T, P>(entry: T, other: P): ObjectsVerifier<T, P> {
+  public objects<T extends {}, P extends {}>(entry: T, other: P): ObjectsVerifier<T, P> {
     return new ObjectsVerifier(entry, other, new ObjectsError());
   }
 
