@@ -4,11 +4,16 @@ import { ObjectsVerifier } from "../../src";
 import { instance, mock, reset, when } from "ts-mockito";
 import { ObjectsError } from "../../src/errors/objects.error";
 
+interface IInnerTest {
+  field: string;
+}
+
 interface ITest {
   id: number;
   name: string;
   creation: Date;
   isActive?: boolean;
+  inner?: IInnerTest | null;
   func: () => void;
 }
 
@@ -198,6 +203,18 @@ describe('ObjectsVerifier', () => {
         expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).ignoring('creation').equal()).not.toThrow();
       })
 
+      it('nulls of an inner are same', () => {
+        const entry = Forger.create<ITest>()!;
+        const exp = Forger.create<ITest>()!;
+        exp.id = entry.id;
+        exp.name = entry.name;
+        exp.isActive = entry.isActive;
+        exp.creation = new Date(entry.creation);
+        exp.inner = entry.inner = null;
+        //
+        expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).ignoring('creation').equal()).not.toThrow();
+      })
+
       it('compareOnly success', () => {
         const entry = Forger.create<ITest>()!;
         const exp = Forger.create<ITest>()!;
@@ -206,6 +223,7 @@ describe('ObjectsVerifier', () => {
         expect(() => new ObjectsVerifier(entry,exp, instance(errorManager)).compareOnly('id').equal()).not.toThrow();
       })
     })
+
     describe('with not', () => {
 
       it('equal throws', () => {
