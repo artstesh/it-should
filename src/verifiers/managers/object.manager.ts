@@ -58,7 +58,7 @@ export class ObjectManager<T> {
   }
 
   private defineProps(): void {
-    Object.keys(this.entry)
+    Object.keys(this.entry as any)
       .filter((k) => typeof (this.entry as any)[k] !== 'function')
       .forEach((k) => this.props.add(k));
   }
