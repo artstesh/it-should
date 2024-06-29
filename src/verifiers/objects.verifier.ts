@@ -1,11 +1,13 @@
-import { ObjectManager } from "./managers/object.manager";
-import { ObjectsError } from "../errors/objects.error";
-import { GeneralVerifier } from "./general.verifier";
+import { ObjectManager } from './managers/object.manager';
+import { ObjectsError } from '../errors/objects.error';
+import { GeneralVerifier } from './general.verifier';
 
 /**
  * An inspector responsible for comparison of objects
  */
-export class ObjectsVerifier<T extends Record<string, any>, P extends Record<string, any>> extends GeneralVerifier<T | null | undefined> {
+export class ObjectsVerifier<T extends Record<string, any>, P extends Record<string, any>> extends GeneralVerifier<
+  T | null | undefined
+> {
   private _rules: { [prop: string]: (o1: any, o2: any) => boolean } = {};
   private readonly entryManager: ObjectManager<T>;
   private readonly otherManager: ObjectManager<P>;
@@ -43,8 +45,11 @@ export class ObjectsVerifier<T extends Record<string, any>, P extends Record<str
    * @param name1 The name of the property of the first object
    * @param name2 The name of the property of the second object
    */
-  map<K extends Exclude<keyof T, symbol>, L extends Exclude<keyof P, symbol>>(name1: K, name2: L): ObjectsVerifier<T, P> {
-    this.otherManager.map(name1 + "", name2 + "");
+  map<K extends Exclude<keyof T, symbol>, L extends Exclude<keyof P, symbol>>(
+    name1: K,
+    name2: L,
+  ): ObjectsVerifier<T, P> {
+    this.otherManager.map(name1 + '', name2 + '');
     return this;
   }
 
@@ -53,8 +58,8 @@ export class ObjectsVerifier<T extends Record<string, any>, P extends Record<str
    * @param params The names of a properties
    */
   ignoring(...params: (Exclude<keyof T, symbol> | Exclude<keyof P, symbol>)[]): ObjectsVerifier<T, P> {
-    this.entryManager.ignore(...params.map((p) => p + ""));
-    this.otherManager.ignore(...params.map((p) => p + ""));
+    this.entryManager.ignore(...params.map((p) => p + ''));
+    this.otherManager.ignore(...params.map((p) => p + ''));
     return this;
   }
 
@@ -69,8 +74,12 @@ export class ObjectsVerifier<T extends Record<string, any>, P extends Record<str
     return this;
   }
 
-  private compareKeys<Z extends Record<string, any>, R extends Record<string, any>>(obj1: ObjectManager<Z>, obj2: ObjectManager<R>, path: string[] = []): string {
-    let result = "";
+  private compareKeys<Z extends Record<string, any>, R extends Record<string, any>>(
+    obj1: ObjectManager<Z>,
+    obj2: ObjectManager<R>,
+    path: string[] = [],
+  ): string {
+    let result = '';
     const props = obj1.getProperties();
     const sameCount = props.size === obj2.countProperties();
     if (!sameCount) return this.errorManager.countProperties();
@@ -82,12 +91,13 @@ export class ObjectsVerifier<T extends Record<string, any>, P extends Record<str
         if (!this._rules[p](val1, val2)) result = this.errorManager.customRule(p);
       } else if (val1 instanceof Date) {
         if (val1?.toString() !== val2?.toString()) result = this.errorManager.differentValues(p, val1, val2);
-      } else if (typeof val1 === "object" && !(!val1 && !val2))
-        result = this.compareKeys(new ObjectManager(val1, this.errorManager),
+      } else if (typeof val1 === 'object' && !(!val1 && !val2))
+        result = this.compareKeys(
+          new ObjectManager(val1, this.errorManager),
           new ObjectManager(val2, this.errorManager),
-          [...path, p]
+          [...path, p],
         );
-      else if (val1 !== val2) result = this.errorManager.differentValues([...path, p].join("."), val1, val2);
+      else if (val1 !== val2) result = this.errorManager.differentValues([...path, p].join('.'), val1, val2);
     });
     return result;
   }
