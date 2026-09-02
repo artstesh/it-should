@@ -94,9 +94,9 @@ ssh key in the agent, valid npm token) → `npm version` (hooks: lint, format, t
 fast-forwards `master` to `v2` and pushes it. The script needs no interactive input once the
 one-time setup is done (Windows ssh-agent + git `core.sshCommand` pointing at Windows OpenSSH,
 and a valid npm token in `~/.npmrc` — an Automation/Granular token from npmjs.com never
-triggers the browser login). The v1 line publishes with `--tag v1`: npm refuses to move
+triggers the browser login). The v1 line publishes with `--tag v1-latest`: npm refuses to move
 `latest` onto a version lower than the current one, so `latest` stays on 2.x and the legacy
-line is installed via `@artstesh/it-should@v1`.
+line is installed via `@artstesh/it-should@v1-latest` or a `^1` semver range.
 
 ## Testing conventions
 
