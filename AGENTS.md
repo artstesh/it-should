@@ -93,8 +93,8 @@ ssh key in the agent, valid npm token) → `npm version` (hooks: lint, format, t
 `npm publish --access public` (runs tests via `prepublishOnly`) → for a v2 release it also
 fast-forwards `master` to `v2` and pushes it. The script needs no interactive input once the
 one-time setup is done (Windows ssh-agent + git `core.sshCommand` pointing at Windows OpenSSH,
-and a valid npm token in `~/.npmrc` — an Automation/Granular token from npmjs.com never
-triggers the browser login). The v1 line publishes with `--tag v1-latest`: npm refuses to move
+and a valid npm token in `~/.npmrc` — a classic Automation token from npmjs.com (npmjs.com -> Access Tokens -> Classic -> Automation) never
+triggers the browser OTP prompt; tokens from "npm login" and Granular tokens still do. The v1 line publishes with `--tag v1-latest`: npm refuses to move
 `latest` onto a version lower than the current one, so `latest` stays on 2.x and the legacy
 line is installed via `@artstesh/it-should@v1-latest` or a `^1` semver range.
 
