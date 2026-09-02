@@ -649,7 +649,14 @@ describe('DateVerifier', () => {
 
         it('not inRange throws', () => {
           const entry = Forger.create<Date>({dateMin: dateMax})!;
-          when(errorManager.before(anything(),anything(),true)).thenReturn(errorMessage);
+          when(errorManager.inRange(anything(),anything(),anything(),true)).thenReturn(errorMessage);
+          //
+          expect(() => new DateVerifier(entry, instance(errorManager)).inRange(dateMin, dateMax)).toThrow(expectedError);
+        })
+
+        it('below min throws', () => {
+          const entry = Forger.create<Date>({dateMax: dateMin})!;
+          when(errorManager.inRange(anything(),anything(),anything(),true)).thenReturn(errorMessage);
           //
           expect(() => new DateVerifier(entry, instance(errorManager)).inRange(dateMin, dateMax)).toThrow(expectedError);
         })
@@ -669,7 +676,7 @@ describe('DateVerifier', () => {
       describe('not', () => {
         it('success', () => {
           const entry = Forger.create<Date>({dateMax, dateMin})!;
-          when(errorManager.before(anything(),anything(),false)).thenReturn(errorMessage);
+          when(errorManager.inRange(anything(),anything(),anything(),false)).thenReturn(errorMessage);
           //
           expect(() => new DateVerifier(entry, instance(errorManager)).not.inRange(dateMin, dateMax)).toThrow(expectedError);
         })
@@ -704,7 +711,14 @@ describe('DateVerifier', () => {
 
         it('not equal throws', () => {
           const entry = Forger.create<Date>({dateMin: dateMax})!;
-          when(errorManager.before(anything(),anything(),true)).thenReturn(errorMessage);
+          when(errorManager.inRange(anything(),anything(),anything(),true)).thenReturn(errorMessage);
+          //
+          expect(() => new DateVerifier(entry.toString(), instance(errorManager)).inRange(dateMin.toString(), dateMax.toString())).toThrow(expectedError);
+        })
+
+        it('below min throws', () => {
+          const entry = Forger.create<Date>({dateMax: dateMin})!;
+          when(errorManager.inRange(anything(),anything(),anything(),true)).thenReturn(errorMessage);
           //
           expect(() => new DateVerifier(entry.toString(), instance(errorManager)).inRange(dateMin.toString(), dateMax.toString())).toThrow(expectedError);
         })
@@ -724,7 +738,7 @@ describe('DateVerifier', () => {
       describe('not', () => {
         it('success', () => {
           const entry = Forger.create<Date>({dateMax, dateMin})!;
-          when(errorManager.before(anything(),anything(),false)).thenReturn(errorMessage);
+          when(errorManager.inRange(anything(),anything(),anything(),false)).thenReturn(errorMessage);
           //
           expect(() => new DateVerifier(entry.toString(), instance(errorManager)).not.inRange(dateMin.toString(), dateMax.toString())).toThrow(expectedError);
         })

@@ -64,7 +64,14 @@ export class DateVerifier extends GeneralVerifier<Date | null | undefined> {
    * @throws {@link ShouldError} if the Date is not defined regardless the presence/absence of not() function.
    */
   inRange = (min: Date | string, max: Date | string): DateVerifier => {
-    return this.before(max) || this.after(min);
+    this.checkDefined();
+    const fixedMin = DateVerifier.fixDate(min);
+    const fixedMax = DateVerifier.fixDate(max);
+    const time = this.entry!.getTime();
+    return this.manage(
+      time > (fixedMin?.getTime() ?? Number.MIN_VALUE) && time < (fixedMax?.getTime() ?? Number.MAX_VALUE),
+      (d) => this.errorManager.inRange(fixedMin, fixedMax, this.entry, d),
+    );
   };
 
   private static fixDate(entry: Date | string | null | undefined): Date | null {
