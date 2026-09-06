@@ -27,12 +27,12 @@ part of observable behavior — specs assert on it and the documentation quotes 
 Two published lines are maintained in parallel; every change is ported between them (see the
 sync flow below).
 
-| Branch   | Line | TypeScript | Role                                                                   |
-|----------|------|------------|-------------------------------------------------------------------------|
-| `v2`     | 2.x  | `^5.0.2`   | **Primary working line.** All changes land here first.                  |
-| `v1`     | 1.x  | `^4.3.5`   | Legacy line; receives a port of every v2 change that compiles on TS 4.  |
-| `master` | 2.x  | —          | Fast-forward mirror of `v2`, updated after every v2 release.            |
-| `wip1`   | 1.x  | —          | Legacy scratch branch; do not use.                                     |
+| Branch   | Line | TypeScript                     | Role                                                                   |
+|----------|------|--------------------------------|-------------------------------------------------------------------------|
+| `v2`     | 2.x  | peer `>=5.0.2 <7`, dev on TS 6 | **Primary working line.** All changes land here first.                  |
+| `v1`     | 1.x  | `^4.3.5`                       | Legacy line; receives a port of every v2 change that compiles on TS 4.  |
+| `master` | 2.x  | —                              | Fast-forward mirror of `v2`, updated after every v2 release.            |
+| `wip1`   | 1.x  | —                              | Legacy scratch branch; do not use.                                     |
 
 ### Sync flow (v2 → v1)
 
@@ -75,16 +75,21 @@ Hard rules:
 
 The commands are identical on every line — run them on the checked-out branch (`v2` or `v1`).
 
-| Command            | Action                                                                   |
-|--------------------|--------------------------------------------------------------------------|
-| `npm test`         | Compile the specs with `ttsc` into `src/`, then run jest.                 |
+| Command            | Action                                                                     |
+|--------------------|----------------------------------------------------------------------------|
+| `npm test`         | Run jest; ts-jest compiles the specs on the fly (see the pipeline note).   |
 | `npm run build`    | Compile the package into `lib/` (also runs on `npm install` via `prepare`). |
-| `npm run lint`     | tslint.                                                                   |
-| `npm run format`   | prettier over `src/**/*.ts`.                                              |
+| `npm run lint`     | tslint.                                                                     |
+| `npm run format`   | prettier over `src/**/*.ts`.                                                |
 
 The test pipeline applies the `@artstesh/forger` AST transformer (see `jest.config.js` and
-`tsconfig.test.json`), so specs may use `Forger.create<T>()` to build test data. Running jest
+`tsconfig.spec.json`): ts-jest runs on the `ts-patch/compiler` compiler with the transformer in
+`astTransformers.before`, so specs may use `Forger.create<T>()` to build test data. Running jest
 with a bare config, or compiling the specs with plain `tsc`, drops the transformer — don't.
+TS 6 notes (v2 only): `compilerOptions.types` defaults to `[]` in TS 6, so `tsconfig.spec.json`
+declares `types: ["jest"]`; it also sets `ignoreDeprecations: "6.0"` because ts-jest forces the
+deprecated `moduleResolution=node10` for CommonJS, and `noEmitOnError: true` (inherited from
+`tsconfig.json`) would otherwise skip emit with error TS5107.
 
 Releasing: use `../release.bat` from the workspace root (run `../release.bat setup` once per
 machine; `../release.bat check [v1|v2|both]` before a release). `release.bat <v1|v2|both>

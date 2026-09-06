@@ -1,6 +1,6 @@
 # TypeScript 6 support on the v2 line
 
-Status: proposed
+Status: in-progress (branch `v2`; implementation complete, release pending)
 
 ## Problem
 
@@ -28,6 +28,28 @@ Notes:
   line before starting.
 - v1 (TypeScript `^4`) is out of scope by nature; this is a legitimate v2-only change under the
   sync flow.
+
+## Implementation notes (2026-09-06, v2)
+
+- Forger 2.1.1 (peer `>=5.0.2 <7`, TS 6 transformer guard) is published — the coordination
+  blocker is resolved; dev dependency moved to `^2.1.1`.
+- Dev toolchain: TS `^6.0.3`, jest 29.7.0, @types/jest 29.5.14, ts-jest 29.4.12, ts-patch
+  4.0.1 (replaces `ttypescript`; unused `ts-transformer-keys` and stale `jest-isolated.config.js`
+  dropped). `tsconfig.test.json` (dead ttsc-era config) replaced by `tsconfig.spec.json`.
+- Pipeline: single-stage `jest` — ts-jest on the `ts-patch/compiler` compiler with the forger
+  transformer in `astTransformers.before`, mirroring the forger repo. Verified load-bearing:
+  without the transformer 64/92 array-verifier specs fail, with it the full suite passes.
+- TS 6 findings fixed along the way: `rootDir` must be explicit next to `outDir` (TS5011) —
+  added to `tsconfig.json`; `compilerOptions.types` defaults to `[]` (no auto `@types/*`) —
+  `tsconfig.spec.json` sets `types: ["jest"]`; ts-jest forces the deprecated
+  `moduleResolution=node10`, and with `noEmitOnError` that skips emit (TS5107) — silenced with
+  `ignoreDeprecations: "6.0"` in `tsconfig.spec.json`; definite-assignment analysis is stricter
+  for captured variables — the deliberate "entry not defined" specs declare
+  `string[] | undefined` / `number[] | undefined` now.
+- Verified on TS 6.0.3: `npm test` (8 suites / 442 tests), `npm run build`, `npm run lint`
+  (tslint 6.1.3 still works under TS 6).
+- Remaining: release as 2.1.0 via `../release.bat v2 minor` (docs in `should-faq` — Versions,
+  Installation — already updated in the same wave), then mark this item done.
 
 ## Affected areas
 

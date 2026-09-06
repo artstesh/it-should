@@ -24,7 +24,7 @@ describe('ArrayVerifier', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: string[];
+        let entry: string[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).empty()).toThrow(expectedError);
       })
@@ -45,7 +45,7 @@ describe('ArrayVerifier', () => {
     describe('with not', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: string[];
+        let entry: string[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).not.empty()).toThrow(expectedError);
       })
@@ -69,7 +69,7 @@ describe('ArrayVerifier', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: string[];
+        let entry: string[] | undefined;
         const expectedLength = Forger.create<number>()!;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).length(expectedLength)).toThrow(expectedError);
@@ -93,7 +93,7 @@ describe('ArrayVerifier', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
         const expectedLength = Forger.create<number>()!;
-        let entry: string[];
+        let entry: string[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).not.length(expectedLength)).toThrow(expectedError);
       })
@@ -118,7 +118,7 @@ describe('ArrayVerifier', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).contain(Forger.create<number>()!)).toThrow(expectedError);
       })
@@ -157,7 +157,7 @@ describe('ArrayVerifier', () => {
     describe('with not', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).not.contain(Forger.create<number>()!)).toThrow(expectedError);
       })
@@ -201,7 +201,7 @@ describe('ArrayVerifier', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager))
           .containExactly(Forger.create<number>()!, Forger.create<number>()!))
@@ -244,7 +244,7 @@ describe('ArrayVerifier', () => {
     describe('with not', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).not
           .containExactly(Forger.create<number>()!, Forger.create<number>()!)).toThrow(expectedError);
@@ -289,7 +289,7 @@ describe('ArrayVerifier', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: string[];
+        let entry: string[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).ordered()).toThrow(expectedError);
       })
@@ -323,7 +323,7 @@ describe('ArrayVerifier', () => {
     describe('with not', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: string[];
+        let entry: string[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).not.ordered()).toThrow(expectedError);
       })
@@ -360,7 +360,7 @@ describe('ArrayVerifier', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).containBy(() => true)).toThrow(expectedError);
       })
@@ -389,7 +389,7 @@ describe('ArrayVerifier', () => {
     describe('with not', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).not.containBy(() => true)).toThrow(expectedError);
       })
@@ -422,7 +422,7 @@ describe('ArrayVerifier', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).containOnly(() => true)).toThrow(expectedError);
       })
@@ -451,7 +451,7 @@ describe('ArrayVerifier', () => {
     describe('with not', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).not.containOnly(() => true)).toThrow(expectedError);
       })
@@ -484,7 +484,7 @@ describe('ArrayVerifier', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).containByExactly(3,() => true)).toThrow(expectedError);
       })
@@ -514,7 +514,7 @@ describe('ArrayVerifier', () => {
     describe('with not', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).not.containByExactly(3,() => true)).toThrow(expectedError);
       })
@@ -550,7 +550,7 @@ describe('ArrayVerifier', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).uniq()).toThrow(expectedError);
       })
@@ -579,7 +579,7 @@ describe('ArrayVerifier', () => {
     describe('with not', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).not.uniq()).toThrow(expectedError);
       })
@@ -611,7 +611,7 @@ describe('ArrayVerifier', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         const compareWith: number[] = Forger.create<number[]>()!;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).equal(compareWith)).toThrow(expectedError);
@@ -651,7 +651,7 @@ describe('ArrayVerifier', () => {
     describe('with not', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         const compareWith: number[] = Forger.create<number[]>()!;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).not.equal(compareWith)).toThrow(expectedError);
@@ -693,7 +693,7 @@ describe('ArrayVerifier', () => {
     describe('direct', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         const compareWith: number[] = Forger.create<number[]>()!;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).equalUnordered(compareWith)).toThrow(expectedError);
@@ -727,7 +727,7 @@ describe('ArrayVerifier', () => {
     describe('with not', () => {
       it('entry not defined throws', () => {
         when(errorManager.defined(true)).thenReturn(errorMessage);
-        let entry: number[];
+        let entry: number[] | undefined;
         const compareWith: number[] = Forger.create<number[]>()!;
         //
         expect(() => new ArrayVerifier(entry, instance(errorManager)).not.equalUnordered(compareWith)).toThrow(expectedError);

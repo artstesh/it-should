@@ -1,11 +1,16 @@
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
   preset: 'ts-jest',
-  globals: {
-    'ts-jest': {
-      astTransformers: {
-        before: ['@artstesh/forger']
-      }
-    }
-  }
+  transform: {
+    '.*.spec.ts': [
+      'ts-jest',
+      {
+        compiler: 'ts-patch/compiler',
+        tsconfig: 'tsconfig.spec.json',
+        astTransformers: {
+          before: ['@artstesh/forger'],
+        },
+      },
+    ],
+  },
 };

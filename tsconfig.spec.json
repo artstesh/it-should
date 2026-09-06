@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["jest"],
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["src/**/*.ts", "spec/**/*.ts"],
+  "exclude": ["node_modules", "lib"]
+}
