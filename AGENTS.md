@@ -11,8 +11,8 @@ and apply here as well.
 1. **Entry.** `should()` (`src/verifiers/should.func.ts`) returns the singleton
    `VerifierFactory` (`src/verifiers/verifier.factory.ts`).
 2. **Dispatch.** A factory method per type kind — `array`, `number`, `string`, `date`,
-   `objects`, plus the immediate `true` / `false` boolean checks — creates the matching
-   verifier, wired to its error manager from `src/errors/`.
+   `objects`, `method`, plus the immediate `true` / `false` boolean checks — creates the
+   matching verifier, wired to its error manager from `src/errors/`.
 3. **Verification.** Verifiers extend `GeneralVerifier` (stores the examined entry, adds
    `defined()`), which extends `AbstractVerifier` (adds the `not` modifier and `manage()`,
    which throws `ShouldError` with a message built by the error manager). Check methods are
@@ -61,7 +61,7 @@ Hard rules:
 | `src/verifiers/verifier.factory.ts`         | `VerifierFactory` — the single dispatch point for verifiers.               |
 | `src/verifiers/abstract.verifier.ts`        | `not` modifier and `manage()` throwing `ShouldError`.                      |
 | `src/verifiers/general.verifier.ts`         | Typed base: stores the entry, adds `defined()`.                            |
-| `src/verifiers/<kind>.verifier.ts`          | One verifier per type kind: number, string, array, date, objects. `method.verifier.ts` is WIP and intentionally not exported. |
+| `src/verifiers/<kind>.verifier.ts`          | One verifier per type kind: number, string, array, date, objects, method. |
 | `src/verifiers/managers/object.manager.ts`  | Deep key traversal for object comparison.                                  |
 | `src/verifiers/utils/`                      | `TimesCounter`, `OrderingComparer`, `VerifyFunc`.                          |
 | `src/errors/`                               | Error-message managers, one per kind; `common.error.ts` is the base.       |
