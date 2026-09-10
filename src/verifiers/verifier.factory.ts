@@ -3,11 +3,13 @@ import { StringVerifier } from './string.verifier';
 import { ObjectsVerifier } from './objects.verifier';
 import { ArrayVerifier } from './array.verifier';
 import { DateVerifier } from './date.verifier';
+import { MethodVerifier } from './method.verifier';
 import { ArrayError } from '../errors/array.error';
 import { NumberError } from '../errors/number.error';
 import { ObjectsError } from '../errors/objects.error';
 import { StringError } from '../errors/string.error';
 import { DateError } from '../errors/date.error';
+import { MethodError } from '../errors/method.error';
 import { ShouldError } from '../models/should.error';
 
 /**
@@ -64,6 +66,15 @@ export class VerifierFactory {
    */
   public date(entry: Date | string | null | undefined): DateVerifier {
     return new DateVerifier(entry, new DateError());
+  }
+
+  /**
+   * Provides an inspector responsible for function verifications
+   * @param entry A function that should be examined
+   * @returns {@link MethodVerifier}
+   */
+  public method<R>(entry: ((...params: any[]) => R) | null | undefined): MethodVerifier<R> {
+    return new MethodVerifier<R>(entry, new MethodError());
   }
 
   /**

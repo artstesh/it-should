@@ -1,6 +1,7 @@
 import {
   ArrayVerifier,
   DateVerifier,
+  MethodVerifier,
   NumberVerifier,
   ObjectsVerifier,
   StringVerifier,
@@ -40,6 +41,12 @@ describe('VerifierFactory', () => {
     const result = VerifierFactory.getInstance().date(Forger.create<Date>());
     //
     expect(typeof result == typeof DateVerifier)
+  })
+
+  it('creates method verifier', () => {
+    const result = VerifierFactory.getInstance().method(() => Forger.create<number>());
+    //
+    expect(typeof result == typeof MethodVerifier)
   })
 
   describe('true', () => {
