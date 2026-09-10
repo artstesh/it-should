@@ -94,9 +94,11 @@ deprecated `moduleResolution=node10` for CommonJS, and `noEmitOnError: true` (in
 Releasing: use `../release.bat` from the workspace root (run `../release.bat setup` once per
 machine; `../release.bat check [v1|v2|both]` before a release). `release.bat <v1|v2|both>
 <patch|minor|major>` runs the whole flow per line: preflights (clean tree, branch up to date,
-ssh key in the agent, valid npm token) → `npm version` (hooks: lint, format, tag, push) →
-`npm publish --access public` (runs tests via `prepublishOnly`) → for a v2 release it also
-fast-forwards `master` to `v2` and pushes it. The script needs no interactive input once the
+ssh key in the agent, valid npm token) → checkout of the line + `npm install` (the lines carry
+different toolchains, so `node_modules` is always synced to the released line) → `npm version`
+(hooks: lint, format, tag, push) → `npm publish --access public` (runs tests via
+`prepublishOnly`) → for a v2 release it also fast-forwards `master` to `v2` and pushes it. A
+`both` release ends with the workspace back on `v2`, dependencies installed. The script needs no interactive input once the
 one-time setup is done (Windows ssh-agent + git `core.sshCommand` pointing at Windows OpenSSH,
 and a valid npm token in `~/.npmrc` — a classic Automation token from npmjs.com (npmjs.com -> Access Tokens -> Classic -> Automation) never
 triggers the browser OTP prompt; tokens from "npm login" and Granular tokens still do. The v1 line publishes with `--tag v1-latest`: npm refuses to move
