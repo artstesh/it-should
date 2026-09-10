@@ -1,6 +1,6 @@
 # Ship the method verifier
 
-Status: in-progress (branch `v2`; implementation complete, release pending)
+Status: done (released as 2.2.0 on v2 / 1.3.0 on v1, 2026-09-10; `master` mirrored to v2)
 
 ## Problem
 
@@ -55,3 +55,10 @@ should().number(age).positive();
   General-Assertions lists, Versions changelog entry for 2.2.0.
 - Remaining: port to `v1` (TS 4-safe code — no adaptation expected), release both lines
   (2.2.0 / 1.3.0), then mark this item done.
+
+## Release
+
+- v1 port: cherry-picks `09fe773` (implementation) and `bc185f7` (backlog proposals) — 452
+  specs green under TS 4.3.5, lint clean.
+- Released 2026-09-10: `2.2.0` on v2 (`latest`), `1.3.0` on v1 (`v1-latest`), `master`
+  fast-forwarded to v2.
