@@ -68,7 +68,7 @@ export class ObjectsVerifier<T extends Record<string, any>, P extends Record<str
    * The method overrides any settings that were set by 'ignoring' method.
    * @param params The names of a properties
    */
-  compareOnly<K extends keyof T>(...params: (keyof T | keyof P)[]): ObjectsVerifier<T, P> {
+  compareOnly(...params: (keyof T | keyof P)[]): ObjectsVerifier<T, P> {
     this.entryManager.compareOnly(...params.map((p: any) => p));
     this.otherManager.compareOnly(...params.map((p: any) => p));
     return this;
