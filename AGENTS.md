@@ -68,19 +68,26 @@ Hard rules:
 | `src/models/`                               | `ShouldError`, `ArrayOrderedSettings`.                                     |
 | `src/index.ts`                              | Package exports — only what is exported here is public API.                |
 | `spec/`                                     | Jest specs mirroring the `src/` structure.                                 |
+| `.github/`                                  | CI workflow (`workflows/ci.yml`) and the tarball smoke sample (`smoke/`).   |
 | `backlog/`                                  | Features to implement — one Markdown file per feature (see `backlog/README.md`). |
 | `lib/`, `src/**/*.js|*.d.ts|*.map`          | Build/test artifacts, gitignored — never edit or commit manually.          |
 
 ## Commands (run inside `it-should/`)
 
-The commands are identical on every line — run them on the checked-out branch (`v2` or `v1`).
+The commands run on the checked-out branch (`v2` or `v1`); only `lint` differs between the
+lines — eslint on `v2`, tslint on `v1`.
 
-| Command            | Action                                                                   |
-|--------------------|--------------------------------------------------------------------------|
-| `npm test`         | Compile the specs with `ttsc` into `src/`, then run jest.                 |
+| Command            | Action                                                                     |
+|--------------------|----------------------------------------------------------------------------|
+| `npm test`         | Run jest; ts-jest compiles the specs on the fly (see the pipeline note).   |
 | `npm run build`    | Compile the package into `lib/` (also runs on `npm install` via `prepare`). |
-| `npm run lint`     | tslint.                                                                   |
-| `npm run format`   | prettier over `src/**/*.ts`.                                              |
+| `npm run lint`     | tslint (the v2 line has migrated to eslint).                                |
+| `npm run format`   | prettier over `src/**/*.ts`.                                                |
+
+CI runs on GitHub Actions (`.github/workflows/ci.yml`) on pushes to `v2`/`v1`/`master` and
+PRs to `v2`/`v1`: the suite on both lines (`test` job), plus a packed-tarball smoke job
+that installs the packed v2 tarball into a consumer project on TS 5.0.2 / 5 / 6 and runs
+`.github/smoke/sample.ts`. The workflow file is line-agnostic and lives on both branches.
 
 The test pipeline applies the `@artstesh/forger` AST transformer (see `jest.config.js` and
 `tsconfig.test.json`), so specs may use `Forger.create<T>()` to build test data. Running jest

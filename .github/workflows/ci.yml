@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [v2, v1, master]
+  pull_request:
+    branches: [v2, v1]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: suite (${{ matrix.line }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        line: [v2, v1]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.line }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+
+  smoke:
+    name: tarball smoke (TS ${{ matrix.ts }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The declared peer range boundaries: the 5.0.2 floor, latest TS 5, latest TS 6.
+        ts: ['5.0.2', '5', '6']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npm pack
+      - name: Install the packed tarball into a consumer project and run a chain
+        run: |
+          mkdir consumer && cd consumer
+          npm init --yes >/dev/null
+          npm install ../*.tgz typescript@${{ matrix.ts }}
+          cp ../.github/smoke/sample.ts sample.ts
+          npx tsc sample.ts --outDir out --strict --target es2018 --module commonjs --esModuleInterop --skipLibCheck
+          node out/sample.js
