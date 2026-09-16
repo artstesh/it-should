@@ -11,8 +11,8 @@ and apply here as well.
 1. **Entry.** `should()` (`src/verifiers/should.func.ts`) returns the singleton
    `VerifierFactory` (`src/verifiers/verifier.factory.ts`).
 2. **Dispatch.** A factory method per type kind — `array`, `number`, `string`, `date`,
-   `objects`, `method`, plus the immediate `true` / `false` boolean checks — creates the
-   matching verifier, wired to its error manager from `src/errors/`.
+   `objects`, `method`, plus the immediate `true` / `false` / `undefined` / `null` checks —
+   creates the matching verifier, wired to its error manager from `src/errors/`.
 3. **Verification.** Verifiers extend `GeneralVerifier` (stores the examined entry, adds
    `defined()`), which extends `AbstractVerifier` (adds the `not` modifier and `manage()`,
    which throws `ShouldError` with a message built by the error manager). Check methods are

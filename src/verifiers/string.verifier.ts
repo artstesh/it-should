@@ -85,6 +85,28 @@ export class StringVerifier extends GeneralVerifier<string | null | undefined> {
     );
 
   /**
+   * Makes sure that the examined string starts with the expected one, case-sensitive.
+   * @param expected The expected beginning of the string
+   * @throws {@link ShouldError} if the string doesn't start with the expected one.
+   * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
+   */
+  startsWith = (expected: string): StringVerifier =>
+    this.manage(this.checkDefined() && !!this.entry?.startsWith(expected), (d) =>
+      this.errorManager.startsWith(expected, this.entry, d),
+    );
+
+  /**
+   * Makes sure that the examined string ends with the expected one, case-sensitive.
+   * @param expected The expected ending of the string
+   * @throws {@link ShouldError} if the string doesn't end with the expected one.
+   * @throws {@link ShouldError} if the string is not defined regardless the presence/absence of not() function.
+   */
+  endsWith = (expected: string): StringVerifier =>
+    this.manage(this.checkDefined() && !!this.entry?.endsWith(expected), (d) =>
+      this.errorManager.endsWith(expected, this.entry, d),
+    );
+
+  /**
    * Makes sure that the examined string contains the expected one, case-sensitive.
    * @param expected The expected part of the string
    * @param counter A function that defines the number of times the string contains the expected one.

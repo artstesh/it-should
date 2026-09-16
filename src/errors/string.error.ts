@@ -27,6 +27,18 @@ export class StringError extends CommonError {
     return direct ? `'${expected}' doesn't equal '${real}'.` : `'${expected}' does equal '${real}', but should not.`;
   }
 
+  startsWith(expected?: string | null, real?: string | null, direct: boolean = true): string {
+    return direct
+      ? `'${real}' doesn't start with '${expected}'.`
+      : `'${real}' starts with '${expected}', but should not.`;
+  }
+
+  endsWith(expected?: string | null, real?: string | null, direct: boolean = true): string {
+    return direct
+      ? `'${real}' doesn't end with '${expected}'.`
+      : `'${real}' ends with '${expected}', but should not.`;
+  }
+
   contains(expected?: string | null, real?: string | null, direct: boolean = true): string {
     return direct
       ? `'${real}' doesn't contain '${expected}' expected number of times.`

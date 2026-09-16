@@ -462,6 +462,136 @@ describe('StringVerifier', () => {
     })
   })
 
+  describe('startsWith', () => {
+
+    it('null throws', () =>{
+      when(errorManager.defined(true)).thenReturn(errorMessage);
+      const expected = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(null, instance(errorManager)).startsWith(expected)).toThrow(expectedError);
+    })
+    it('undefined throws', () =>{
+      when(errorManager.defined(true)).thenReturn(errorMessage);
+      const expected = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(undefined, instance(errorManager)).startsWith(expected)).toThrow(expectedError);
+    })
+    it('different prefix throws', () =>{
+      const entry = Forger.create<string>()!;
+      const other = Forger.create<string>()!;
+      when(errorManager.startsWith(other,entry,true)).thenReturn(errorMessage);
+      //
+      expect(() => new StringVerifier(entry, instance(errorManager)).startsWith(other)).toThrow(expectedError);
+    })
+    it('uppercased prefix throws', () =>{
+      const entry = Forger.create<string>({stringLength: 50})!;
+      let other = entry.toUpperCase();
+      when(errorManager.startsWith(other,entry,true)).thenReturn(errorMessage);
+      //
+      expect(() => new StringVerifier(entry, instance(errorManager)).startsWith(other)).toThrow(expectedError);
+    })
+    it('success', () =>{
+      const prefix = Forger.create<string>()!;
+      const entry = prefix + Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry, instance(errorManager)).startsWith(prefix)).not.toThrow();
+    })
+  })
+
+  describe('not startsWith', () => {
+
+    it('null throws', () =>{
+      when(errorManager.defined(true)).thenReturn(errorMessage);
+      const expected = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(null, instance(errorManager)).not.startsWith(expected)).toThrow(expectedError);
+    })
+    it('undefined throws', () =>{
+      when(errorManager.defined(true)).thenReturn(errorMessage);
+      const expected = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(undefined, instance(errorManager)).not.startsWith(expected)).toThrow(expectedError);
+    })
+    it('matching prefix throws', () =>{
+      const prefix = Forger.create<string>()!;
+      const entry = prefix + Forger.create<string>()!;
+      when(errorManager.startsWith(prefix,entry,false)).thenReturn(errorMessage);
+      //
+      expect(() => new StringVerifier(entry, instance(errorManager)).not.startsWith(prefix)).toThrow(expectedError);
+    })
+    it('different prefix success', () =>{
+      const entry = Forger.create<string>()!;
+      const other = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry, instance(errorManager)).not.startsWith(other)).not.toThrow();
+    })
+  })
+
+  describe('endsWith', () => {
+
+    it('null throws', () =>{
+      when(errorManager.defined(true)).thenReturn(errorMessage);
+      const expected = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(null, instance(errorManager)).endsWith(expected)).toThrow(expectedError);
+    })
+    it('undefined throws', () =>{
+      when(errorManager.defined(true)).thenReturn(errorMessage);
+      const expected = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(undefined, instance(errorManager)).endsWith(expected)).toThrow(expectedError);
+    })
+    it('different suffix throws', () =>{
+      const entry = Forger.create<string>()!;
+      const other = Forger.create<string>()!;
+      when(errorManager.endsWith(other,entry,true)).thenReturn(errorMessage);
+      //
+      expect(() => new StringVerifier(entry, instance(errorManager)).endsWith(other)).toThrow(expectedError);
+    })
+    it('uppercased suffix throws', () =>{
+      const entry = Forger.create<string>({stringLength: 50})!;
+      let other = entry.toUpperCase();
+      when(errorManager.endsWith(other,entry,true)).thenReturn(errorMessage);
+      //
+      expect(() => new StringVerifier(entry, instance(errorManager)).endsWith(other)).toThrow(expectedError);
+    })
+    it('success', () =>{
+      const suffix = Forger.create<string>()!;
+      const entry = Forger.create<string>()! + suffix;
+      //
+      expect(() => new StringVerifier(entry, instance(errorManager)).endsWith(suffix)).not.toThrow();
+    })
+  })
+
+  describe('not endsWith', () => {
+
+    it('null throws', () =>{
+      when(errorManager.defined(true)).thenReturn(errorMessage);
+      const expected = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(null, instance(errorManager)).not.endsWith(expected)).toThrow(expectedError);
+    })
+    it('undefined throws', () =>{
+      when(errorManager.defined(true)).thenReturn(errorMessage);
+      const expected = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(undefined, instance(errorManager)).not.endsWith(expected)).toThrow(expectedError);
+    })
+    it('matching suffix throws', () =>{
+      const suffix = Forger.create<string>()!;
+      const entry = Forger.create<string>()! + suffix;
+      when(errorManager.endsWith(suffix,entry,false)).thenReturn(errorMessage);
+      //
+      expect(() => new StringVerifier(entry, instance(errorManager)).not.endsWith(suffix)).toThrow(expectedError);
+    })
+    it('different suffix success', () =>{
+      const entry = Forger.create<string>()!;
+      const other = Forger.create<string>()!;
+      //
+      expect(() => new StringVerifier(entry, instance(errorManager)).not.endsWith(other)).not.toThrow();
+    })
+  })
+
   describe('hasLength', () => {
     let strLength: number;
     let entry: string;
