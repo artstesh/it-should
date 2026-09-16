@@ -34,9 +34,7 @@ export class StringError extends CommonError {
   }
 
   endsWith(expected?: string | null, real?: string | null, direct: boolean = true): string {
-    return direct
-      ? `'${real}' doesn't end with '${expected}'.`
-      : `'${real}' ends with '${expected}', but should not.`;
+    return direct ? `'${real}' doesn't end with '${expected}'.` : `'${real}' ends with '${expected}', but should not.`;
   }
 
   contains(expected?: string | null, real?: string | null, direct: boolean = true): string {
