@@ -99,4 +99,20 @@ export class VerifierFactory {
     if (!!entry) result = false;
     if (!result) throw new ShouldError('The entry expected to be false.');
   }
+
+  /**
+   * Makes sure that the value is undefined. The comparison is strict: null does not pass.
+   * @param entry A value that should be examined
+   */
+  public undefined(entry: any): void {
+    if (entry !== undefined) throw new ShouldError('The entry expected to be undefined.');
+  }
+
+  /**
+   * Makes sure that the value is null. The comparison is strict: undefined does not pass.
+   * @param entry A value that should be examined
+   */
+  public null(entry: any): void {
+    if (entry !== null) throw new ShouldError('The entry expected to be null.');
+  }
 }

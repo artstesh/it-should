@@ -114,4 +114,34 @@ describe('VerifierFactory', () => {
       expect(() => VerifierFactory.getInstance().false(0)).not.toThrow();
     })
   })
+
+  describe('undefined', () => {
+    it('undefined success', () => {
+      expect(() => VerifierFactory.getInstance().undefined(undefined)).not.toThrow();
+    })
+    it('null throws', () => {
+      expect(() => VerifierFactory.getInstance().undefined(null)).toThrow(ShouldError);
+    })
+    it('string value throws', () => {
+      expect(() => VerifierFactory.getInstance().undefined(Forger.create<string>())).toThrow(ShouldError);
+    })
+    it('null throws the message', () => {
+      expect(() => VerifierFactory.getInstance().undefined(null)).toThrow('The entry expected to be undefined.');
+    })
+  })
+
+  describe('null', () => {
+    it('null success', () => {
+      expect(() => VerifierFactory.getInstance().null(null)).not.toThrow();
+    })
+    it('undefined throws', () => {
+      expect(() => VerifierFactory.getInstance().null(undefined)).toThrow(ShouldError);
+    })
+    it('string value throws', () => {
+      expect(() => VerifierFactory.getInstance().null(Forger.create<string>())).toThrow(ShouldError);
+    })
+    it('undefined throws the message', () => {
+      expect(() => VerifierFactory.getInstance().null(undefined)).toThrow('The entry expected to be null.');
+    })
+  })
 })
